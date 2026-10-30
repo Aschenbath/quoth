@@ -53,7 +53,14 @@ def load(path: str, dtype: str = "bfloat16", name: str | None = None, mmap: bool
 
 def _encode(lm: Loaded, text: str):
     enc = lm.tok(text, return_offsets_mapping=True, add_special_tokens=True)
-    return enc["input_ids"], [tuple(o) for o in enc["offset_mapping"]]
+    ids, offs = enc["input_ids"], [tuple(o) for o in enc["offset_mapping"]]
+    # Every model starts from its beginning-of-text token. Gemma's tokenizer adds
+    # <bos> itself; OLMo 2's adds nothing, and its <|endoftext|> is the token that
+    # precedes each new document in training.
+    bos = lm.tok.bos_token_id
+    if bos is not None and ids[:1] != [bos]:
+        ids, offs = [bos] + ids, [(0, 0)] + offs
+    return ids, offs
 
 
 @torch.inference_mode()

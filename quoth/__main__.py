@@ -3,7 +3,9 @@
   python -m quoth sample   --works data/works.json --cache CACHE --out data/passages.jsonl
   python -m quoth score    --model MODEL_DIR --passages data/passages.jsonl --out results/NAME.jsonl
   python -m quoth generate --model MODEL_DIR --passages data/passages.jsonl --scores results/NAME.jsonl --out results/NAME.gen.jsonl
+  python -m quoth web      --index v4_dclm-baseline_llama --out results/web-dclm.jsonl
   python -m quoth recite   --model MODEL_DIR --text any_book.txt
+  python -m quoth report   --site docs/data.json
 """
 
 from __future__ import annotations
@@ -69,7 +71,7 @@ def _write_meta(a: argparse.Namespace, out: Path, lm_name: str) -> None:
 
     meta = {
         "model": lm_name,
-        "model_dir": str(Path(a.model).resolve()),
+        "model_dir": Path(a.model).name,  # folder name only; the full path is local to the machine
         "dtype": a.dtype,
         "torch": torch.__version__,
         "transformers": transformers.__version__,
@@ -136,6 +138,24 @@ def cmd_generate(a: argparse.Namespace) -> None:
             print(f"  {i}/{len(chosen)} {s['id']} generated={n} teacher-forced={s['greedy_words']}", flush=True)
 
 
+def cmd_web(a: argparse.Namespace) -> None:
+    """Count each passage's seam in an open corpus (see web.py). Resumable."""
+    from .web import count, seam
+
+    out = Path(a.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    todo = _todo(a, out)
+    with out.open("a", encoding="utf-8", newline="\n") as f:
+        for i, p in enumerate(todo, 1):
+            q = seam(p)
+            row = {"id": p["id"], "index": a.index, "seam": q, "count": count(q, a.index)}
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+            f.flush()
+            if i % 100 == 0 or i == len(todo):
+                print(f"  {i}/{len(todo)}  last {p['id']} count={row['count']}", flush=True)
+            time.sleep(a.delay)
+
+
 def cmd_recite(a: argparse.Namespace) -> None:
     """Probe any text: one passage every --every words, print what the model recites."""
     from .score import load, score
@@ -156,6 +176,12 @@ def cmd_recite(a: argparse.Namespace) -> None:
             best = (r["greedy_words"], k, recited)
     if best:
         print(f"\n{total} passages. Longest verbatim continuation: {best[0]} words at word {best[1]}:\n  {best[2]}")
+
+
+def cmd_report(a: argparse.Namespace) -> None:
+    from .report import main as report
+
+    report(results=a.results, site=a.site, data=a.data)
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -193,6 +219,15 @@ def main(argv: list[str] | None = None) -> None:
             s.add_argument("--random", type=int, default=60, help="plus this many seeded random other passages")
         s.set_defaults(fn=fn)
 
+    s = sub.add_parser("web", help="count each passage's seam in an open corpus (infini-gram)")
+    s.add_argument("--index", default="v4_dclm-baseline_llama")
+    s.add_argument("--passages", default="data/passages.jsonl")
+    s.add_argument("--out", required=True)
+    s.add_argument("--ids")
+    s.add_argument("--limit", type=int)
+    s.add_argument("--delay", type=float, default=0.5, help="seconds between requests")
+    s.set_defaults(fn=cmd_web)
+
     s = sub.add_parser("recite", help="probe any text file for verbatim memory")
     s.add_argument("--model", required=True)
     s.add_argument("--dtype", default="bfloat16")
@@ -200,6 +235,12 @@ def main(argv: list[str] | None = None) -> None:
     s.add_argument("--text", required=True)
     s.add_argument("--every", type=int, default=500, help="words between probes")
     s.set_defaults(fn=cmd_recite)
+
+    s = sub.add_parser("report", help="summary tables, and the site's data.json with --site")
+    s.add_argument("--results", default="results")
+    s.add_argument("--data", default="data")
+    s.add_argument("--site", help="write the site data here, e.g. docs/data.json")
+    s.set_defaults(fn=cmd_report)
 
     a = ap.parse_args(argv)
     a.fn(a)

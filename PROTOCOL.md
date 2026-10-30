@@ -133,4 +133,31 @@ What the pilot changed:
 
 ## Changes after freezing
 
-None yet.
+Everything below was decided after the main run had started. The sample, the
+metrics and the threshold above did not change.
+
+* **A fourth model, OLMo 2 1B** (`allenai/OLMo-2-0425-1B`, Apache 2.0, from
+  ModelScope), added after the three Gemma runs. Its pretraining data is public
+  and indexed by infini-gram, so step 5 can count each passage in the data the
+  model learned from instead of a stand-in. Same passages, same code.
+* **Beginning-of-text token.** OLMo 2's tokenizer adds none, so `score.py` puts
+  the tokenizer's `bos_token_id` (`<|endoftext|>` for OLMo 2) in front when the
+  tokenizer has not. Gemma's tokenizer already adds `<bos>`, so its scores are
+  unaffected.
+* **A second corpus in step 5.** Seams are also counted in
+  `v4_olmo-mix-1124_llama`, OLMo 2's pretraining data. OLMo 2 is compared with
+  its own data, the Gemma models with DCLM.
+* **Seams across a line break are left out of step 5** (225 of 1,071 passages,
+  `web.crosses_break`). Copies of a text break lines in different places, so the
+  exact count of a seam that spans a line or paragraph break measures formatting
+  more than copies. This was decided after the counts were in.
+* **Step 4, explained.** Generation and the teacher-forced run agree on 77 of 80
+  passages. Two of the three that differ are near-ties, where the top two tokens
+  are within a few points and bfloat16 breaks the tie differently in one forward
+  pass than in step-by-step decoding (`pg932-29`, `pg1065-04`). The third is an
+  edition difference (`pg46-00`): the model predicts a paragraph break before
+  "Old Marley was as dead as a door-nail", where this edition has none, and
+  generation, compared by words, continues all 50. Recited counts use teacher
+  forcing, as planned.
+* **Reporting.** `python -m quoth report` prints the tables and writes the site's
+  `docs/data.json`.

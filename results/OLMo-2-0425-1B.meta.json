@@ -1,0 +1,12 @@
+{
+  "model": "OLMo-2-0425-1B",
+  "model_dir": "OLMo-2-0425-1B",
+  "dtype": "bfloat16",
+  "torch": "2.15.0+cpu",
+  "transformers": "5.22.0",
+  "python": "3.13.12",
+  "machine": "Intel64 Family 6 Model 197 Stepping 2, GenuineIntel",
+  "threads": 16,
+  "passages": "data/passages.jsonl",
+  "started": "2026-10-30 14:53:57"
+}
