@@ -77,7 +77,7 @@ fetch("data.json")
 
 function init() {
   for (const n of document.querySelectorAll('[data-n="passages"]')) n.textContent = fmt(Object.keys(D.passages).length);
-  drawAll([renderStats, renderRecital, renderModelButtons, renderWorks, renderBook, renderKinds,
+  drawAll([renderStats, renderRecital, renderRaven, renderOpenings, renderModelButtons, renderWorks, renderBook, renderKinds,
     renderTiers, renderScale, renderWeb, renderAltar, renderMethodNumbers]);
   // Charts are drawn at their shown width, so redraw them when the width really changes.
   let shownW = innerWidth, timer = null;
@@ -136,8 +136,8 @@ function renderStats() {
     n + m.recited.filter((r) => ["forgotten", "late"].includes(D.passages[r.id].work.tier)).length, 0);
   const q = (t) => D.works.filter((w) => w.tier === t).reduce((n, w) => n + w.quoted, 0);
   const tiles = [
-    [fmt(Object.keys(D.passages).length), "passages from 33 ghost stories and 16 controls, on 4 open models"],
-    [String(recited), `passages ${name(STAR)} recites for ten words or more`],
+    [fmt(D.raven.words), `words of The Raven ${name(STAR)} writes on its own, from the poem's first 40`],
+    [String(recited), `passages of ${fmt(Object.keys(D.passages).length)} it recites for ten exact words or more`],
     [String(forgottenRecited), "passages recited from the 15 forgotten or newly posted books, by any of the four models"],
     [`${q("forgotten")} vs ${q("canon")}`, "Wikiquote lines found in the 9 forgotten books vs the 10 classics"],
   ];
@@ -201,6 +201,111 @@ function renderRecital(which = "opening") {
     b.addEventListener("click", () => renderRecital(k));
     return b;
   }));
+}
+
+/* ---------------- the Raven ---------------- */
+
+/* The long generation cut into stanzas of [kind, text], with the words that differ from the 1845 text marked. */
+function ravenStanzas(r) {
+  const stanzas = [[]];
+  const push = (kind, text) => text.split(/(\n[ \t]*\n\s*)/).forEach((part, i) => {
+    if (i % 2) stanzas.push([]);
+    else if (part) stanzas[stanzas.length - 1].push([kind, part]);
+  });
+  let at = 0;
+  for (const [kind, text] of r.marked) {
+    let from = 0;
+    for (const s of r.passed) {
+      const i = s.at - at;
+      if (i < from || i >= text.length) continue;
+      push(kind, text.slice(from, i));
+      push("slip", text.slice(i, i + s.said.length));
+      from = i + s.said.length;
+    }
+    push(kind, text.slice(from));
+    at += text.length;
+  }
+  return stanzas;
+}
+
+function stanzaEl(parts, r) {
+  const box = el("p", { class: "stanza" });
+  for (const [kind, text] of parts) {
+    if (kind === "slip") {
+      const s = r.passed.find((x) => x.said === text);
+      box.append(el("span", { class: "slip", title: `the 1845 text has “${s.book}”`, text }));
+    } else {
+      box.append(el("span", { class: kind === "book" ? "w run" : "own", text }));
+    }
+  }
+  return box;
+}
+
+function renderRaven() {
+  const r = D.raven, p = D.passages["pg1065-00"], sc = p.scores[STAR];
+  const stanzas = ravenStanzas(r);
+  const loop = stanzas.pop().map(([, t]) => t).join("");
+  const line = loop.slice(0, loop.indexOf("!") + 1);
+  const times = loop.split(line).length - 1;
+  for (const n of document.querySelectorAll('[data-n="star"]')) n.textContent = name(STAR);
+  for (const n of document.querySelectorAll('[data-n="raven-words"]')) n.textContent = fmt(r.words);
+
+  const gap = (from, to, label) => {
+    const b = el("button", { class: "btn gap", type: "button", text: label });
+    b.addEventListener("click", () => b.replaceWith(...stanzas.slice(from, to).map((s) => stanzaEl(s, r))));
+    return b;
+  };
+  const first = stanzaEl(stanzas[0], r);
+  first.prepend(el("span", { class: "prefix", text: p.prefix }));
+  $("#raven-poem").replaceChildren(first, gap(1, 10, "Stanzas 2 to 10, all from memory: show them"),
+    stanzaEl(stanzas[10], r), gap(11, 12, "Stanza 12, from memory: show it"), stanzaEl(stanzas[12], r),
+    el("p", { class: "stanza" }, el("span", { class: "own", text: line }), el("span", { class: "times", text: ` and ${fmt(times - 1)} more times, until the 2,000 tokens I allowed ran out` })));
+
+  const stops = el("div", { class: "fork" },
+    el("p", {}, el("span", { class: "lbl", text: "Where Poe goes on" }),
+      "On the cushion’s velvet lining that the lamp-light gloated o’er,\nBut whose velvet-violet lining with the lamp-light gloating o’er,\nShe shall press, ah, nevermore!"));
+  const nums = [
+    ["40", "words given"],
+    [fmt(r.words), "words that follow, from memory"],
+    [String(r.passed.length), "of them differ from the 1845 text"],
+    [String(sc.g), "words is its exact score in the main test"],
+  ];
+  $("#raven-notes").replaceChildren(el("div", { class: "tally" }, ...nums.map(([v, l]) => el("div", {}, el("b", { text: v }), el("span", { text: l })))), stops);
+
+  const raven = D.workByPg.get(1065).passages.map((id) => D.passages[id]);
+  const q3 = D.passages["pg1065-q03"].recall.pieces.at(-1);
+  const low = Math.min(...raven.map((q) => q.scores[STAR].t));
+  $("#raven-after").textContent = `It stops three lines short of “She shall press, ah, nevermore!” and writes lines of its own. Then it does what the bird does, ` +
+    `and says one thing over and over. Poe never wrote “${line}” It does not stop because it knows no more. Started from a line in the eighth stanza, ` +
+    `it jumps ahead and recites ${fmt(q3.words)} words from stanza ${q3.blocks[0]} into stanza ${q3.blocks[1]}, where the 400 tokens I allowed ran out. All ${raven.length} sampled passages of The Raven are ` +
+    `at least ${pct(Math.floor(low * 100) / 100)} predicted.`;
+  $("#raven-floor").textContent = `The main test on this page gives that same passage a score of ${sc.g} words. It compares exactly, and the third word is a ` +
+    `quotation mark this copy prints straight and the model writes curly. Project Gutenberg's copy of the poem is also a different printing, with “visiter” ` +
+    `for “visitor” and “sad soul” for “fancy”, so I checked the recitation against the Poetry Foundation's text of the 1845 edition as well. Everything ` +
+    `below uses the strict test, so read its counts as a floor.`;
+}
+
+function renderOpenings() {
+  const fig = $("#fig-openings");
+  figHead(fig, "Every opening, read the same way", `${name(STAR)} was given each book's first 40 words and left to write. The bars count the words that follow from memory; the last column is the main test's share of the next 50 words, predicted one at a time with each mistake corrected.`);
+  const rows = D.works.filter((w) => w.pg).map((w) => {
+    const p = D.passages[`pg${w.pg}-00`];
+    return { w, p, n: p.recall ? p.recall.words : 0, t: p.scores[STAR].t };
+  });
+  const max = Math.max(...rows.map((r) => r.n));
+  const row = ({ w, n, t }) => el("div", { class: "opn" },
+    el("span", { class: "t", text: w.title, title: `${w.author}, ${w.year} · downloaded ${fmt(w.downloads)} times last month` }),
+    el("span", { class: "bar" }, n ? el("i", { style: `width:${Math.max(0.4, n / max * 100)}%` }) : null),
+    el("span", { class: "n", text: fmt(n) }),
+    el("span", { class: "p", text: pct(t) }));
+  const group = (tier, label) => el("div", { class: "opn-group" },
+    el("div", { class: "opn head" }, el("h4", { text: label }), el("span"), el("span", { class: "n", text: "words" }), el("span", { class: "p", text: "predicted" })),
+    ...rows.filter((r) => r.w.tier === tier).sort((a, b) => b.n - a.n || b.t - a.t).map(row));
+  fig.append(el("div", { class: "opns" },
+    el("div", {}, group("canon", "The canon"), group("genre", "Genre favourites")),
+    el("div", {}, group("forgotten", "The forgotten"), group("late", "Posted after training"))));
+  const frank = rows.find((r) => r.w.pg === 84), raven = rows.find((r) => r.w.pg === 1065);
+  fig.append(el("figcaption", { text: `Words are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line up again. Each opening had 400 tokens of room, The Raven 2,000 because it had not stopped. One wrong turn is usually the end: ${frank.w.title}, downloaded ${fmt(frank.w.downloads)} times last month to The Raven's ${fmt(raven.w.downloads)}, is ${pct(frank.t)} predicted when corrected, but left alone it goes wrong after ${plural(frank.n, "word")} and does not find its way back.` }));
 }
 
 /* ---------------- reader ---------------- */
@@ -520,7 +625,7 @@ function copiesLede(all) {
   const orec = om.filter((p) => p.scores[OLMO].g >= D.recited_at).length;
   const olong = Math.max(...om.map((p) => p.scores[OLMO].g));
   $("#copies-open").textContent = `DCLM only stands in for Gemma's training data, which is private. OLMo 2's pretraining data is public, so ` +
-    `for ${name(OLMO)} the count is exact: ${om.length} random pages occur a hundred times or more in the very text it learned from, and it ` +
+    `for ${name(OLMO)} the count is exact: ${om.length} random pages occur a hundred times or more in the very text it was pretrained on, and it ` +
     `recites ${spell(orec)} of them; its longest run on any of them is ${plural(olong, "word")}. The opening of Usher occurs ` +
     `${fmt(uo.web["olmo-mix"])} times in that data, and ${name(OLMO)} predicts ${pct(uo.scores[OLMO].t)} of it, about what it manages on a random page.`;
 }
@@ -634,6 +739,21 @@ function firstSentences(p, max = 45) {
   return out.join(" ").replace(/ …$/, "…");
 }
 
+/* where the given words stop: what the book says next, and what the machine wrote instead */
+function fork(p, max = 30) {
+  if (!p.said) return null;
+  const clip = (ws) => ws.slice(0, max).join(" ") + (ws.length > max ? "…" : "");
+  const book = targetWords(p), said = p.said.trim().split(/\s+/);
+  let n = 0;
+  while (n < said.length && n < book.length && said[n] === book[n]) n++;
+  return el("div", { class: "fork" },
+    el("p", { class: "from", text: "… " + p.prefix.trim().split(/\s+/).slice(-6).join(" ") }),
+    el("p", {}, el("span", { class: "lbl", text: "The book" }), clip(book)),
+    el("p", {}, el("span", { class: "lbl", text: name(STAR) }),
+      n ? el("span", { class: "same", text: said.slice(0, n).join(" ") + " " }) : null,
+      el("span", { class: "own", text: clip(said.slice(n)) })));
+}
+
 function altarCard(w) {
   const open = D.passages[w.passages.find((id) => D.passages[id].kind === "opening")];
   const best = bestRun(w, STAR);
@@ -642,6 +762,7 @@ function altarCard(w) {
     el("div", { class: "dates", text: `${w.dates.replace("-", "–")} · ${w.title}, ${w.year}` }),
     BIOS[w.pg] ? el("p", { class: "bio", text: BIOS[w.pg] }) : null,
     el("blockquote", { text: firstSentences(open) }),
+    fork(open),
     el("div", { class: "nums" },
       el("div", {}, "Downloaded ", el("b", { text: fmt(w.downloads) }), " times last month"),
       el("div", {}, "Lines on Wikiquote: ", el("b", { text: String(w.quoted) })),
@@ -653,7 +774,10 @@ function renderAltar() {
   const ghosts = new Set(["forgotten", "late"]);
   const longest = Math.max(...Object.values(D.passages).filter((p) => ghosts.has(p.work.tier))
     .flatMap((p) => Object.values(p.scores).map((s) => s.g)));
+  const top = Math.max(...Object.values(D.passages).filter((p) => ghosts.has(p.work.tier))
+    .flatMap((p) => Object.values(p.scores).map((s) => s.t)));
   for (const n of document.querySelectorAll('[data-n="ghost-run"]')) n.textContent = plural(longest, "word");
+  for (const n of document.querySelectorAll('[data-n="ghost-top"]')) n.textContent = pct(top);
   $("#altar").replaceChildren(...D.works.filter((w) => w.tier === "forgotten").map(altarCard));
   $("#late-note").textContent = "Six more ghost books were first posted to Project Gutenberg in 2025 and 2026, after these models' training data was collected. To the machine they read just like the forgotten ones.";
   $("#altar-late").replaceChildren(...D.works.filter((w) => w.tier === "late").map(altarCard));

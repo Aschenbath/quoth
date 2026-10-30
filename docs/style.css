@@ -365,6 +365,12 @@ svg.chart { display: block; width: 100%; height: auto; }
 .ofr .dates { font: 400 14px/1.4 var(--sans); color: var(--muted); margin: 4px 0 8px; }
 .ofr .bio { font-size: 16px; line-height: 1.45; color: var(--ink-2); margin: 0 0 10px; }
 .ofr blockquote { margin: 0 0 12px; font-size: 17px; line-height: 1.5; font-style: italic; color: var(--ink); flex: 1; }
+.fork { margin: 0 0 12px; padding-left: 12px; border-left: 2px solid rgba(159, 216, 204, 0.45); font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+.fork p { margin: 0 0 6px; }
+.fork p:last-child { margin-bottom: 0; }
+.fork .from { color: var(--muted); font-style: italic; }
+.fork .lbl { display: block; font: 500 12px/1.4 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.fork .own { color: var(--ghost); font-style: italic; }
 .ofr .nums { font: 400 13px/1.5 var(--sans); color: var(--muted); border-top: 1px solid var(--grid); padding-top: 8px; }
 .ofr .nums b { color: var(--ink-2); font-weight: 500; }
 .ofr a { font: 500 14px/1.4 var(--sans); margin-top: 8px; }
@@ -431,4 +437,38 @@ h1 { animation: rise 0.9s both, flicker 5s 1s ease-in-out infinite; }
   .altar { grid-template-columns: minmax(0, 1fr); }
   .card { padding: 14px 16px; }
   .card .text, .recital .text { font-size: 18px; }
+}
+
+/* ---------------- the Raven ---------------- */
+
+.poem { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 36px; align-items: start; margin: 26px 0 30px; }
+.verse-box { background: var(--surface); border: 1px solid var(--ring); border-radius: 6px; padding: clamp(18px, 3vw, 34px); font-size: clamp(18px, 2vw, 21px); line-height: 1.6; }
+.stanza { white-space: pre-line; margin: 0 0 1.1em; }
+.stanza:last-child { margin-bottom: 0; }
+.stanza .own { color: var(--ghost); font-style: italic; }
+.stanza .slip { color: #e98f6b; text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+.stanza .times { font: 400 15px/1.5 var(--sans); color: var(--muted); }
+.btn.gap { display: block; margin: 0 0 1.1em; font-size: 15px; }
+.poem-notes { position: sticky; top: 24px; }
+.tally { display: grid; gap: 10px; margin-bottom: 18px; }
+.tally div { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.tally b { font: 500 26px/1 var(--sans); color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.tally span { font: 400 15px/1.35 var(--sans); color: var(--muted); }
+.poem-notes .fork { white-space: pre-line; font-size: 17px; }
+
+.opns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 36px; margin-top: 10px; }
+.opn { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr) 2.6em 3.6em; gap: 8px; align-items: center; min-height: 24px; font: 400 15px/1.25 var(--sans); color: var(--ink-2); }
+.opn.head { color: var(--muted); font-size: 13px; margin-top: 14px; }
+.opn-group:first-child .opn.head { margin-top: 0; }
+.opn h4 { margin: 0; font: 500 13px/1.3 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.opn .bar { display: block; height: 10px; }
+.opn .bar i { display: block; height: 100%; min-width: 2px; background: var(--marigold); border-radius: 0 4px 4px 0; }
+.opn .n, .opn .p { text-align: right; font-variant-numeric: tabular-nums; }
+.opn .n { color: var(--ink); }
+.opn .p { color: var(--muted); }
+
+@media (max-width: 900px) {
+  .poem { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .poem-notes { position: static; }
+  .opns { grid-template-columns: minmax(0, 1fr); }
 }

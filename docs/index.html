@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quoth: what the machine remembers</title>
-<meta name="description" content="Which ghost stories can small open-weight language models recite word for word? 1,071 passages from 33 public-domain ghost stories, scored on Gemma 3, Gemma 4 and OLMo 2.">
+<meta name="description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. 1,071 passages from 33 public-domain ghost stories, scored on Gemma 3, Gemma 4 and OLMo 2.">
 <meta property="og:title" content="Quoth: what the machine remembers">
-<meta property="og:description" content="Gemma 4 can recite the first page of Jekyll and Hyde. It cannot recite one sentence by the nine ghost-story writers we forgot.">
+<meta property="og:description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. On fifteen forgotten ghost books, no model gets past five.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -34,8 +34,25 @@
 
 <main>
 
+<section class="wrap" id="raven">
+  <h2><span class="n">I &middot; The bird</span>Its only stock and store</h2>
+  <p class="lede">In Poe&rsquo;s poem a man asks a raven its name, and it answers with the one word it has.
+    &ldquo;Doubtless,&rdquo; he says, &ldquo;what it utters is its only stock and store, caught from some unhappy
+    master.&rdquo; I gave <span data-n="star">Gemma 4 E4B</span> the first 40 words of The Raven and let it write. It
+    wrote the next <span data-n="raven-words">709</span>, those lines among them.</p>
+  <div class="poem">
+    <div class="verse-box" id="raven-poem"></div>
+    <aside class="poem-notes" id="raven-notes"></aside>
+  </div>
+  <p class="lede" id="raven-after"></p>
+  <div class="figs">
+    <figure class="wide" id="fig-openings"></figure>
+  </div>
+  <p class="lede" id="raven-floor"></p>
+</section>
+
 <section class="wrap" id="seance">
-  <h2><span class="n">I &middot; The s&eacute;ance</span>Read along with the machine</h2>
+  <h2><span class="n">II &middot; The s&eacute;ance</span>Read along with the machine</h2>
   <p class="lede">Each card is one passage. The faded words are what the model was given. After that, a bright word is
     one it predicted exactly, a dark word is one it missed, and the glowing run is what it would have recited on its
     own before its first mistake.</p>
@@ -59,7 +76,7 @@
 </section>
 
 <section class="wrap" id="keeps">
-  <h2><span class="n">II &middot; What it keeps</span>The doorway, not the house</h2>
+  <h2><span class="n">III &middot; What it keeps</span>The doorway, not the house</h2>
   <p class="lede" id="keeps-lede">In the ten classics, all four models lean the same way, and the lean sharpens as they
     grow: openings and the lines people quote rise above text no model has seen, while random pages from the middle of
     the same books stay close to it. The four random pages Gemma 4 E4B does recite are doorways of their own: the
@@ -73,7 +90,7 @@
 </section>
 
 <section class="wrap" id="copies">
-  <h2><span class="n">III &middot; The copies</span>A hundred copies are not enough</h2>
+  <h2><span class="n">IV &middot; The copies</span>A hundred copies are not enough</h2>
   <p class="lede" id="copies-lede"></p>
   <p class="lede" id="copies-open"></p>
   <div class="figs">
@@ -83,19 +100,23 @@
 
 <section class="wrap ofrenda" id="ofrenda">
   <div class="papel" aria-hidden="true"></div>
-  <h2><span class="n">IV &middot; D&iacute;a de los Muertos</span>An ofrenda for the forgotten</h2>
+  <h2><span class="n">V &middot; D&iacute;a de los Muertos</span>An ofrenda for the forgotten</h2>
   <p class="lede">On the Day of the Dead, families set out an ofrenda of marigolds, photographs and the food the dead
     loved, because the dead are only truly gone when no one remembers them. Many Victorian ghost stories were written
-    by women who are rarely read now. Not one passage of theirs survives in these models: the longest run any of the
-    four manages on their books is <span data-n="ghost-run">five words</span>. Here is a sentence from each, and a way to
-    read the rest.</p>
+    by women who are rarely read now. I picked nine such books by hand, and six more posted to Project Gutenberg after
+    the models&rsquo; data was collected. Thirteen of the fifteen writers are women, but this list was chosen, not
+    sampled, so it says nothing about whether models remember women less. None of the sampled passages comes back: the
+    longest run any of the four models manages on these books is <span data-n="ghost-run">five words</span>, and no
+    passage is more than <span data-n="ghost-top">56%</span> predicted. Here is a sentence from each, then the place
+    where the forty given words stop, what the book says next, what the machine wrote instead, and a way to read the
+    rest.</p>
   <div class="altar" id="altar"></div>
   <p class="late-note" id="late-note"></p>
   <div class="altar" id="altar-late"></div>
 </section>
 
 <section class="wrap" id="method">
-  <h2><span class="n">V &middot; How it works</span>Method, and why it had to be open</h2>
+  <h2><span class="n">VI &middot; How it works</span>Method, and why it had to be open</h2>
   <div class="cols" id="method-cols">
     <div>
       <h3>Measuring memory</h3>
@@ -108,6 +129,16 @@
         in A Christmas Carol the model wants a paragraph break before &ldquo;Old Marley was as dead as a door-nail,&rdquo;
         where this edition has none, and then goes on word for word.</p>
       <p>A passage counts as <b>recited</b> when the run reaches ten words. No control passage came close.</p>
+      <p>That makes the counts a floor. The test starts at word 41, so a model can know a book's first sentence and still
+        score nothing. Matching is exact, so the opening of Usher stops at 25 words because this edition prints two hyphens
+        where the model writes a dash, and the opening of The Raven stops at two because the model writes a curly
+        quotation mark. A line under ten words cannot count: Gemma 4 E4B predicts all of &ldquo;man is not truly one,
+        but truly two.&rdquo; I noticed these after the protocol was frozen, so the counts stay as they were.</p>
+      <h3>Reading on</h3>
+      <p>Part I reads long generations with a second, looser ruler, added after the main run and kept apart from it. Words
+        are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line
+        up again. It reads all 33 openings the same way, so none of them was picked for looking good; the other Raven
+        passages it mentions were picked by hand.</p>
       <h3>Controls</h3>
       <ul>
         <li>16 passages in the style of the books, written for this project and never published, so no model can have
@@ -121,8 +152,9 @@
       <h3>Counting copies</h3>
       <p>For each passage, the <a href="https://infini-gram.io">infini-gram</a> API counts the ten words where the given
         text meets the continuation: in DCLM, a deduplicated open web corpus that stands in for Gemma's private data,
-        and in OLMo 2's own pretraining data. Exact matching misses copies with other spellings or punctuation, so
-        passages whose ten words span a line break are left out of every count.</p>
+        and in OLMo 2's own pretraining data, which is itself mostly DCLM, so the two counts are close and are not
+        independent evidence. Exact matching misses copies with other spellings or punctuation, so passages whose ten
+        words span a line break are left out of every count.</p>
     </div>
     <div>
       <h3>On a laptop</h3>
@@ -134,7 +166,7 @@
         <li><b>Open weights</b> give the full probability of every token. A chat API returns text, and an
           instruction-tuned model paraphrases; neither tells you what the base model knows by heart.</li>
         <li><b>Open data</b> lets you ask why. OLMo 2's pretraining data, about four trillion tokens, is public and
-          indexed by infini-gram, so every passage can be counted in exactly what the model learned from. Gemma's
+          indexed by infini-gram, so every passage can be counted in the data the model was pretrained on. Gemma's
           training data is not public, so for Gemma an open web corpus is only a stand-in.</li>
         <li><b>Open texts</b>: the books are public domain, from Project Gutenberg, and the quoted lines come from
           Wikiquote's volunteers.</li>
@@ -149,7 +181,7 @@
 <footer class="wrap">
   <p>Made by Nash Aschenbath for the DEV Hacktoberfest 2026 Open-Source AI Challenge. Built with Claude Code, an AI
     coding agent, which wrote most of the code and text with me; the 16 control passages were written by Claude.
-    Texts: Project Gutenberg (public domain). Quote selections: English Wikiquote (CC BY-SA 4.0). Models: Gemma 3 1B
+    Texts: Project Gutenberg (public domain); the 1845 text of The Raven as given by the Poetry Foundation. Quote selections: English Wikiquote (CC BY-SA 4.0). Models: Gemma 3 1B
     (Gemma license), Gemma 4 E2B and E4B (Apache 2.0), OLMo 2 1B (Apache 2.0). Corpus counts: infini-gram API. Code: MIT.</p>
 </footer>
 

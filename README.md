@@ -45,6 +45,12 @@ deduplicated corpora, so they undercount the web, and DCLM is only a stand-in fo
 Gemma's private training data. Prediction is measured on a sample of pages, not
 on whole books, so "recites none" means none of the sampled passages.
 
+Read loosely, the counts are a floor. Given the first 40 words of The Raven,
+Gemma 4 E4B writes the next 709 words of the poem, with 2 differences from the
+1845 text, though the strict test scores that passage 2 because of a curly
+quotation mark. `quoth/recall.py` is that looser ruler; it was added after the
+main run and is kept apart from the counts above.
+
 ## Reproduce
 
 Python 3.13, CPU only. About 10 GB of free RAM is enough for Gemma 4 E4B with
@@ -72,6 +78,11 @@ python -m quoth web --index v4_olmo-mix-1124_llama --out results/web-olmo-mix.js
 # 5. tables, and the site's data
 python -m quoth report --site docs/data.json
 
+# 6. long generations, read with the looser ruler
+python -m quoth generate --model models/gemma-4-E4B --mmap --ids ID,ID,...     --max-new 400 --out results/gemma-4-E4B.long.jsonl
+python -m quoth recall --gen results/gemma-4-E4B.long.jsonl --cache GUTENBERG_DIR     --out results/gemma-4-E4B.recall.jsonl
+python -m quoth recall --gen results/gemma-4-E4B.raven.jsonl --book data/raven-1845.txt     --out results/gemma-4-E4B.raven-1845.jsonl
+
 # probe any text file of your own
 python -m quoth recite --model models/gemma-3-1b-pt --text some_book.txt
 ```
@@ -88,10 +99,12 @@ python -m quoth recite --model models/gemma-3-1b-pt --text some_book.txt
 | `quoth/score.py` | teacher-forced scoring and greedy decoding |
 | `quoth/mmapload.py` | memory-mapped loading of safetensors checkpoints |
 | `quoth/web.py` | counts of a passage's seam in open corpora, via infini-gram |
+| `quoth/recall.py` | the looser ruler for long generations (not a frozen measure) |
 | `quoth/report.py` | the tables and the site's `data.json` |
 | `docs/` | the site (plain HTML, CSS and JS, served by GitHub Pages) |
 | `data/works.json` | the 33 works, tiers and Gutenberg download counts |
 | `data/controls_novel.txt` | 16 control passages written for this project |
+| `data/raven-1845.txt` | The Raven, 1845 text, from the Poetry Foundation's page |
 | `data/passages.jsonl` | all 1,071 passages |
 | `data/quotes.json` | the Wikiquote lines found in each work |
 | `results/` | one JSON line per passage per model, and the corpus counts |
@@ -101,6 +114,8 @@ python -m quoth recite --model models/gemma-3-1b-pt --text some_book.txt
 * Code: MIT ([LICENSE](LICENSE)).
 * Texts: public-domain books from [Project Gutenberg](https://www.gutenberg.org).
   The passages are excerpts with the Gutenberg header and footer removed.
+* The Raven (`data/raven-1845.txt`): public domain, first published by Wiley and
+  Putnam, 1845; text as given by the [Poetry Foundation](https://www.poetryfoundation.org/poems/48860/the-raven).
 * Quote selections: [English Wikiquote](https://en.wikiquote.org), CC BY-SA 4.0.
   The page each quote came from is in `data/quotes.json` (`source`).
 * The novel control passages were written by an AI assistant (Claude) for this

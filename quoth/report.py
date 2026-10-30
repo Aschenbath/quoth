@@ -21,6 +21,7 @@ MODELS = [
 ]
 GENERATED = "gemma-4-E4B"  # the model whose greedy continuations were generated (PROTOCOL.md, step 4)
 RECITED = 10  # greedy_words at or above this counts as recited (PROTOCOL.md)
+KNOWN = 0.8  # top1_words at or above this: added after the main run, because a stray dash cannot break it (PROTOCOL.md)
 TIERS = ["canon", "genre", "forgotten", "late", "novel"]
 KINDS = ["opening", "body", "quoted", "novel"]
 
@@ -52,7 +53,9 @@ def group_stats(rows: list[dict]) -> dict:
     return {
         "n": len(rows),
         "recited": sum(r["greedy_words"] >= RECITED for r in rows),
+        "known": sum(r["top1_words"] >= KNOWN for r in rows),
         "max_greedy": max(r["greedy_words"] for r in rows),
+        "max_top1": max(top1),
         "top1": round(sum(top1) / len(top1), 4),
         "top1_ci": [round(lo, 4), round(hi, 4)],
     }
@@ -72,7 +75,9 @@ def summarize(passages: list[dict], res: dict[str, dict[str, dict]]) -> dict:
                 if g:
                     cells[f"{t}/{k}"] = group_stats(g)
         recited = sorted(((r["greedy_words"], p["id"]) for p, r in rows if r["greedy_words"] >= RECITED), reverse=True)
-        out[mid] = {"n": len(rows), "kinds": kinds, "cells": cells,
+        tiers = {t: group_stats([r for p, r in rows if p["tier"] == t]) for t in TIERS
+                 if any(p["tier"] == t for p, _ in rows)}
+        out[mid] = {"n": len(rows), "kinds": kinds, "cells": cells, "tiers": tiers,
                     "recited": [{"id": i, "words": g} for g, i in recited]}
     return out
 
@@ -91,6 +96,9 @@ def tables(summary: dict, names: dict[str, str]) -> str:
         body.append([names[mid]] + [f"{s['kinds'][k]['recited']} / {s['kinds'][k]['n']}" if k in s["kinds"] else ""
                                     for k in KINDS])
     parts.append("Recited passages (greedy run >= %d words)\n\n" % RECITED + _md_table(head, body))
+    body = [[names[mid]] + [f"{s['tiers'][t]['known']} / {s['tiers'][t]['n']} (best {s['tiers'][t]['max_top1']:.2f})" for t in TIERS]
+            for mid, s in summary.items()]
+    parts.append(f"Passages with top-1 >= {KNOWN} (and the best top-1 in the tier)\n\n" + _md_table(["model"] + TIERS, body))
     for mid, s in summary.items():
         body = []
         for t in TIERS:
@@ -151,7 +159,8 @@ def generation_check(gens: dict[str, dict]) -> dict:
 
 
 def site_data(works: list[dict], passages: list[dict], res: dict, summary: dict,
-              web: dict[str, dict[str, int]], gens: dict[str, dict], quotes: dict) -> dict:
+              web: dict[str, dict[str, int]], gens: dict[str, dict], quotes: dict, said: dict[str, dict],
+              recall: dict[str, dict], raven: dict | None) -> dict:
     names = dict(MODELS)
     by_pg: dict = {}
     for p in passages:
@@ -168,8 +177,10 @@ def site_data(works: list[dict], passages: list[dict], res: dict, summary: dict,
         for name, counts in web.items():
             if p["id"] in counts and not crosses_break(p):
                 row.setdefault("web", {})[name] = counts[p["id"]]
-        if p["id"] in gens:
-            row["said"] = gens[p["id"]]["generated"]
+        if p["id"] in said:
+            row["said"] = said[p["id"]]["generated"]
+        if p["id"] in recall:
+            row["recall"] = {k: v for k, v in recall[p["id"]].items() if k in ("words", "said_words", "passed", "pieces")}
         if p["kind"] == "quoted":
             q = quotes[str(p["pg"])][int(p["id"].rsplit("-q", 1)[1])]
             row["source"] = q["source"]
@@ -181,7 +192,7 @@ def site_data(works: list[dict], passages: list[dict], res: dict, summary: dict,
                       "passages": by_pg.get(None, []), "quoted": 0})
     return {"models": [{"id": m, "name": names[m]} for m in res], "recited_at": RECITED,
             "works": out_works, "passages": out_passages, "summary": summary,
-            "checks": generation_check(gens) if gens else None}
+            "checks": generation_check(gens) if gens else None, "raven": raven}
 
 
 def main(results: str = "results", site: str | None = None, data: str = "data") -> None:
@@ -203,7 +214,14 @@ def main(results: str = "results", site: str | None = None, data: str = "data") 
     if web:
         print("\n" + copies_table(passages, res, web))
     if site:
-        out = site_data(works, passages, res, summary, web, gens, quotes)
+        # the forgotten openings were generated for the site alone, so they stay out of the check above
+        extra = Path(results) / f"{GENERATED}.ofrenda.jsonl"
+        said = {r["id"]: r for r in sample.read_jsonl(extra)} if extra.exists() else {}
+        recall_file = Path(results) / f"{GENERATED}.recall.jsonl"
+        recall = {r["id"]: r for r in sample.read_jsonl(recall_file)} if recall_file.exists() else {}
+        raven_file = Path(results) / f"{GENERATED}.raven-1845.jsonl"
+        raven = sample.read_jsonl(raven_file)[0] if raven_file.exists() else None
+        out = site_data(works, passages, res, summary, web, gens, quotes, said | gens, recall, raven)
         Path(site).parent.mkdir(parents=True, exist_ok=True)
         Path(site).write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"\nsite data -> {site} ({Path(site).stat().st_size / 1e6:.2f} MB)")

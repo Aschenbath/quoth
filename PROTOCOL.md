@@ -139,7 +139,7 @@ metrics and the threshold above did not change.
 * **A fourth model, OLMo 2 1B** (`allenai/OLMo-2-0425-1B`, Apache 2.0, from
   ModelScope), added after the three Gemma runs. Its pretraining data is public
   and indexed by infini-gram, so step 5 can count each passage in the data the
-  model learned from instead of a stand-in. Same passages, same code.
+  model was pretrained on instead of a stand-in. Same passages, same code.
 * **Beginning-of-text token.** OLMo 2's tokenizer adds none, so `score.py` puts
   the tokenizer's `bos_token_id` (`<|endoftext|>` for OLMo 2) in front when the
   tokenizer has not. Gemma's tokenizer already adds `<bos>`, so its scores are
@@ -161,3 +161,23 @@ metrics and the threshold above did not change.
   forcing, as planned.
 * **Reporting.** `python -m quoth report` prints the tables and writes the site's
   `docs/data.json`.
+* **Long generations, for illustration only.** None of these enters a strict
+  count. `generate --ids --max-new` wrote Gemma 4 E4B continuations of the 15
+  forgotten and late openings (`.ofrenda.jsonl`), of all 33 openings at 400 tokens
+  and of four more Raven passages and `pg43-q04`, picked by hand
+  (`.long.jsonl`), and of the opening of The Raven at 2,000 tokens, because it had
+  not stopped at 400 (`.raven.jsonl`). OLMo 2 got all 33 openings at 400 tokens.
+* **A second, looser ruler** (`quoth/recall.py`). Words are compared without
+  punctuation or case, a slip of up to two words is passed over if the next three
+  line up again, and a generation is split into pieces of eight words or more
+  that follow the book from wherever they start (a piece that only repeats the
+  40 given words is left out). It was added after the strict
+  results were in, because a curly quotation mark gave The Raven a strict score
+  of 2. The strict counts stay primary.
+* **`KNOWN = 0.8`.** The report also counts passages with top-1 at or above 0.8,
+  a measure a stray dash cannot break. Added after the main run.
+* **A second text of The Raven.** Gutenberg's copy is a different printing, so
+  the recitation is also compared with the 1845 text (`data/raven-1845.txt`,
+  public domain, transcribed from the Poetry Foundation's page).
+* **Two birth years corrected in `works.json`,** for display only: Marjorie Bowen
+  1885 (Gutenberg lists 1888) and Sarah Doudney 1841.

@@ -5,6 +5,7 @@
   python -m quoth generate --model MODEL_DIR --passages data/passages.jsonl --scores results/NAME.jsonl --out results/NAME.gen.jsonl
   python -m quoth web      --index v4_dclm-baseline_llama --out results/web-dclm.jsonl
   python -m quoth recite   --model MODEL_DIR --text any_book.txt
+  python -m quoth recall   --gen results/NAME.long.jsonl --cache CACHE --out results/NAME.recall.jsonl
   python -m quoth report   --site docs/data.json
 """
 
@@ -114,10 +115,14 @@ def cmd_generate(a: argparse.Namespace) -> None:
     out = Path(a.out)
     passages = {p["id"]: p for p in sample.read_jsonl(Path(a.passages))}
     scores = sample.read_jsonl(Path(a.scores))
-    rng = random.Random(sample.SEED)
-    chosen = [s for s in scores if s["greedy_words"] >= a.min_words]
-    rest = [s for s in scores if s["greedy_words"] < a.min_words]
-    chosen += rng.sample(rest, min(a.random, len(rest)))
+    if a.ids:  # passages picked by hand, outside the check described in PROTOCOL.md
+        keep = {p["id"] for p in _todo(a, out)}
+        chosen = [s for s in scores if s["id"] in keep]
+    else:
+        rng = random.Random(sample.SEED)
+        chosen = [s for s in scores if s["greedy_words"] >= a.min_words]
+        rest = [s for s in scores if s["greedy_words"] < a.min_words]
+        chosen += rng.sample(rest, min(a.random, len(rest)))
     done = {r["id"] for r in sample.read_jsonl(out)} if out.exists() else set()
     chosen = [s for s in chosen if s["id"] not in done]
     if not chosen:
@@ -128,7 +133,7 @@ def cmd_generate(a: argparse.Namespace) -> None:
         for i, s in enumerate(chosen, 1):
             p = passages[s["id"]]
             t = time.perf_counter()
-            g = generate(lm, p["prefix"], s["n_tok"] + 8)
+            g = generate(lm, p["prefix"], a.max_new or s["n_tok"] + 8)
             n = leading_word_matches(g, p["target"])
             row = {"id": s["id"], "model": lm.name, "generated": g, "gen_words": n,
                    "tf_words": s["greedy_words"], "agree": n == s["greedy_words"],
@@ -178,6 +183,32 @@ def cmd_recite(a: argparse.Namespace) -> None:
         print(f"\n{total} passages. Longest verbatim continuation: {best[0]} words at word {best[1]}:\n  {best[2]}")
 
 
+def cmd_recall(a: argparse.Namespace) -> None:
+    """Compare long generations with the whole book (see recall.py)."""
+    from .recall import recall
+
+    passages = {p["id"]: p for p in sample.read_jsonl(Path(a.passages))}
+    works = {w["pg"]: w for w in corpus.load_works(Path(a.works))}
+    seen, rows = set(), []
+    for f in a.gen:
+        for r in sample.read_jsonl(Path(f)):
+            p = passages[r["id"]]
+            if r["id"] in seen or p["pg"] is None:  # the control passages have no book to compare with
+                continue
+            seen.add(r["id"])
+            # --book compares with another printing of the text instead of the Gutenberg one
+            book = (Path(a.book).read_text(encoding="utf-8") if a.book
+                    else corpus.narrative(corpus.normalize(corpus.fetch(p["pg"], Path(a.cache))), works[p["pg"]]))
+            rows.append({"id": r["id"], **recall(p["prefix"], r["generated"], book)})
+    rows.sort(key=lambda r: -r["words"])
+    sample.write_jsonl(rows, Path(a.out))
+    for r in rows:
+        where = ", ".join(f"{q['words']} (paragraph {q['blocks'][0]}" + (f"-{q['blocks'][1]})" if q["blocks"][1] != q["blocks"][0] else ")")
+                          for q in r["pieces"])
+        print(f"{r['id']:<12} {r['words']:>4} of {r['said_words']:>4} words  passed over {len(r['passed'])}  pieces: {where or '-'}")
+    print(f"{len(rows)} generations -> {a.out}")
+
+
 def cmd_report(a: argparse.Namespace) -> None:
     from .report import main as report
 
@@ -217,6 +248,7 @@ def main(argv: list[str] | None = None) -> None:
             s.add_argument("--scores", required=True)
             s.add_argument("--min-words", type=int, default=5, help="always generate when teacher-forced run >= this")
             s.add_argument("--random", type=int, default=60, help="plus this many seeded random other passages")
+            s.add_argument("--max-new", type=int, help="tokens to generate (default: the target's length plus 8)")
         s.set_defaults(fn=fn)
 
     s = sub.add_parser("web", help="count each passage's seam in an open corpus (infini-gram)")
@@ -235,6 +267,15 @@ def main(argv: list[str] | None = None) -> None:
     s.add_argument("--text", required=True)
     s.add_argument("--every", type=int, default=500, help="words between probes")
     s.set_defaults(fn=cmd_recite)
+
+    s = sub.add_parser("recall", help="how far long generations keep to the whole book")
+    s.add_argument("--gen", nargs="+", required=True, help="generate output files; the first with a passage wins")
+    s.add_argument("--passages", default="data/passages.jsonl")
+    s.add_argument("--works", default="data/works.json")
+    s.add_argument("--cache", help="directory of downloaded Gutenberg texts")
+    s.add_argument("--book", help="compare the generations with this text file instead")
+    s.add_argument("--out", required=True)
+    s.set_defaults(fn=cmd_recall)
 
     s = sub.add_parser("report", help="summary tables, and the site's data.json with --site")
     s.add_argument("--results", default="results")
