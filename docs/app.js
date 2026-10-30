@@ -294,7 +294,7 @@ function renderOpenings() {
   });
   const max = Math.max(...rows.map((r) => r.n));
   const row = ({ w, n, t }) => el("div", { class: "opn" },
-    el("span", { class: "t", text: w.title, title: `${w.author}, ${w.year} · downloaded ${fmt(w.downloads)} times last month` }),
+    el("span", { class: "t", text: w.title, title: `${w.author}, ${w.year} · downloaded ${fmt(w.downloads)} times in the 30 days to Oct 30, 2026` }),
     el("span", { class: "bar" }, n ? el("i", { style: `width:${Math.max(0.4, n / max * 100)}%` }) : null),
     el("span", { class: "n", text: fmt(n) }),
     el("span", { class: "p", text: pct(t) }));
@@ -305,7 +305,7 @@ function renderOpenings() {
     el("div", {}, group("canon", "The canon"), group("genre", "Genre favourites")),
     el("div", {}, group("forgotten", "The forgotten"), group("late", "Posted after training"))));
   const frank = rows.find((r) => r.w.pg === 84), raven = rows.find((r) => r.w.pg === 1065);
-  fig.append(el("figcaption", { text: `Words are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line up again. Each opening had 400 tokens of room, The Raven 2,000 because it had not stopped. One wrong turn is usually the end: ${frank.w.title}, downloaded ${fmt(frank.w.downloads)} times last month to The Raven's ${fmt(raven.w.downloads)}, is ${pct(frank.t)} predicted when corrected, but left alone it goes wrong after ${plural(frank.n, "word")} and does not find its way back.` }));
+  fig.append(el("figcaption", { text: `Words are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line up again. Each opening had 400 tokens of room, The Raven 2,000 because it had not stopped. One wrong turn is usually the end: ${frank.w.title}, downloaded ${fmt(frank.w.downloads)} times in the 30 days to Oct 30, 2026 to The Raven's ${fmt(raven.w.downloads)}, is ${pct(frank.t)} predicted when corrected, but left alone it goes wrong after ${plural(frank.n, "word")} and does not find its way back.` }));
 }
 
 /* ---------------- reader ---------------- */
@@ -396,7 +396,7 @@ function renderBook() {
   const mean = scored.reduce((s, p) => s + p.scores[state.model].t, 0) / Math.max(1, scored.length);
   const rec = scored.filter((p) => p.scores[state.model].g >= D.recited_at).length;
   const meta = w.pg
-    ? `${w.author} (${w.dates}), ${w.year} · downloaded ${fmt(w.downloads)} times last month · on Project Gutenberg since ${w.released.slice(0, 4)}`
+    ? `${w.author} (${w.dates}), ${w.year} · downloaded ${fmt(w.downloads)} times in the 30 days to Oct 30, 2026 · on Project Gutenberg since ${w.released.slice(0, 4)}`
     : "Passages in the style of the books, written for this project on 2026-10-30, after every model here was trained.";
   const head = el("div", { class: "book-head" }, el("h3", { text: w.title }), el("div", { class: "meta", text: meta }),
     el("div", { class: "meta", text: `${name(state.model)}: ${rec} of ${scored.length} passages recited · ${pct(mean)} of words predicted on average` }),
@@ -570,7 +570,7 @@ function renderTiers() {
   dotRows(svg, rows, 148, domainOf(rows.flatMap((r) => r.marks)), { rowH: 46, ref: [nov.top1, `new control text ${pct(nov.top1)}`] });
   box.append(svg);
   fig.append(tableView(["books", "passages", "predicted", "95% interval", "n", "recited"], table),
-    el("figcaption", { text: "The line is the 16 passages written for this project. An AI wrote them, and text written by an AI is easier for a model to predict, so they are a generous baseline: random pages from the forgotten books land a little below them, level with the books posted after training." }));
+    el("figcaption", { text: "The line is the 16 passages written for this project. An AI wrote them, and text written by an AI may be easier for a model to predict, so they may be a generous baseline: random pages from the forgotten books land a little below them, level with the books posted after training." }));
 }
 
 function renderScale() {
@@ -764,7 +764,7 @@ function altarCard(w) {
     el("blockquote", { text: firstSentences(open) }),
     fork(open),
     el("div", { class: "nums" },
-      el("div", {}, "Downloaded ", el("b", { text: fmt(w.downloads) }), " times last month"),
+      el("div", {}, "Downloaded ", el("b", { text: fmt(w.downloads) }), " times in the 30 days to Oct 30, 2026"),
       el("div", {}, "Lines on Wikiquote: ", el("b", { text: String(w.quoted) })),
       el("div", {}, `Longest run ${name(STAR)} recites: `, el("b", { text: `${best} word${best === 1 ? "" : "s"}` }))),
     el("a", { href: `https://www.gutenberg.org/ebooks/${w.pg}`, text: `Read ${w.title} →` }));

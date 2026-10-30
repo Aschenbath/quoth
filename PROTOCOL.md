@@ -184,3 +184,14 @@ metrics and the threshold above did not change.
   public domain, transcribed from the Poetry Foundation's page).
 * **Two birth years corrected in `works.json`,** for display only: Marjorie Bowen
   1885 (Gutenberg lists 1888) and Sarah Doudney 1841.
+* **Found in a final audit (not fixed in the frozen results).** (1) For OLMo 2, 68
+  passages have a first target token that spans the end of the prefix (for example
+  `.
+
+`), so that token also asks for the prefix's last punctuation. Rescoring
+  them with the prefix encoded on its own changes no recited count and no run on the
+  forgotten books (`pg345-24` drops from 2 to 0, `pg8492-00` from 2 to 0,
+  `pg1065-q07` from 1 to 0). Gemma's tokenizer has no such crossings. (2) OLMo's
+  generations were started without the `<|endoftext|>` token that scoring puts
+  first. (3) 55 of the 102 quoted targets are shorter than 50 words, and five are
+  shorter than ten, so they cannot count as recited under the frozen threshold.

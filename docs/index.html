@@ -143,7 +143,7 @@
       <ul>
         <li>16 passages in the style of the books, written for this project and unpublished before the models were trained, so no model can have
           seen them. An AI (Claude) wrote them, and text written by an AI is easier for a model to predict, so they are
-          a generous baseline.</li>
+          possibly a generous baseline.</li>
         <li>Six ghost books first posted to Project Gutenberg in 2025 and 2026, after the models' training data was
           collected: human-written pages the models have probably never seen.</li>
         <li>The sample, metrics and threshold were committed to git in <a href="https://github.com/Aschenbath/quoth/blob/main/PROTOCOL.md">PROTOCOL.md</a>
@@ -158,7 +158,7 @@
     </div>
     <div>
       <h3>On a laptop</h3>
-      <p>Everything ran on one laptop CPU in bfloat16. Gemma 4 E4B's checkpoint is 15 GB and the machine had about
+      <p>Everything ran on one laptop CPU in bfloat16. Gemma 4 E4B's checkpoint is 16 GB and the machine had about
         10 GB of RAM free, so the weights are memory-mapped straight from the safetensors file: the operating system
         pages in only what a forward pass touches. About 1.6 seconds per passage.</p>
       <h3>Why it had to be open</h3>

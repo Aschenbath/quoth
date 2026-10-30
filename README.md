@@ -14,7 +14,7 @@ with the models on the [site](https://aschenbath.github.io/quoth/) (`docs/`).
 
 ## Results
 
-A passage is **recited** when greedy decoding continues the real text for ten
+A passage is **recited** when, scored with teacher forcing, the model's top guess continues the real text for ten
 words or more. Passages recited, out of 1,071:
 
 | model | openings (33) | random pages (920) | quoted lines (102) | new controls (16) |
@@ -37,7 +37,7 @@ words or more. Passages recited, out of 1,071:
   recites three.
 
 Limits: the control passages were written by an AI, and such text is easier for a
-model to predict, so they are a generous baseline; random pages from the forgotten
+model to predict, so they may be a generous baseline; random pages from the forgotten
 books (33%) and from books posted after training (34%) land a little below them.
 The "late" books are probably unseen, not certainly. Copies are exact matches in
 deduplicated corpora, so they undercount the web, and DCLM is only a stand-in for
