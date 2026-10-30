@@ -154,7 +154,10 @@ metrics and the threshold above did not change.
 * **Step 4, explained.** Generation and the teacher-forced run agree on 77 of 80
   passages. Two of the three that differ are near-ties, where the top two tokens
   are within a few points and bfloat16 breaks the tie differently in one forward
-  pass than in step-by-step decoding (`pg932-29`, `pg1065-04`). The third is an
+  pass than in step-by-step decoding (`pg932-29`, `pg1065-04`). In `pg1065-04`
+  the flip is a semicolon for an exclamation mark at word 3; generation then
+  recites the rest of the stanza, so the words are there although the exact count
+  is 2. The third is an
   edition difference (`pg46-00`): the model predicts a paragraph break before
   "Old Marley was as dead as a door-nail", where this edition has none, and
   generation, compared by words, continues all 50. Recited counts use teacher

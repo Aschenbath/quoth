@@ -275,14 +275,14 @@ function renderRaven() {
   const raven = D.workByPg.get(1065).passages.map((id) => D.passages[id]);
   const q3 = D.passages["pg1065-q03"].recall.pieces.at(-1);
   const low = Math.min(...raven.map((q) => q.scores[STAR].t));
-  $("#raven-after").textContent = `It stops three lines short of “She shall press, ah, nevermore!” and writes lines of its own. Then it does what the bird does, ` +
+  $("#raven-after").textContent = `It stops two lines short of “She shall press, ah, nevermore!” and writes lines of its own. Then it does what the bird does, ` +
     `and says one thing over and over. Poe never wrote “${line}” It does not stop because it knows no more. Started from a line in the eighth stanza, ` +
     `it jumps ahead and recites ${fmt(q3.words)} words from stanza ${q3.blocks[0]} into stanza ${q3.blocks[1]}, where the 400 tokens I allowed ran out. All ${raven.length} sampled passages of The Raven are ` +
     `at least ${pct(Math.floor(low * 100) / 100)} predicted.`;
   $("#raven-floor").textContent = `The main test on this page gives that same passage a score of ${sc.g} words. It compares exactly, and the third word is a ` +
     `quotation mark this copy prints straight and the model writes curly. Project Gutenberg's copy of the poem is also a different printing, with “visiter” ` +
     `for “visitor” and “sad soul” for “fancy”, so I checked the recitation against the Poetry Foundation's text of the 1845 edition as well. Everything ` +
-    `below uses the strict test, so read its counts as mostly a floor (Part VI has the one exception).`;
+    `below uses the strict test, so read its counts as a floor.`;
 }
 
 function renderOpenings() {
