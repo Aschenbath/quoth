@@ -4,8 +4,8 @@ A passage is a prefix and the target text that really follows it. We run the
 model once over prefix + target and, at every target position, ask whether the
 model's single most likely next token is the true one.
 
-* The leading run of hits is exactly what greedy decoding (temperature 0) would
-  reproduce verbatim from the prefix. Matches after the first miss do not count
+* The leading run of hits is what greedy decoding (temperature 0) would
+  reproduce verbatim from the prefix, unless a near-tie breaks differently. Matches after the first miss do not count
   toward it, because greedy decoding would already have left the text.
 * Hits anywhere in the target (per word) give a softer picture: which words the
   model "saw coming" given the true text before them. Ordinary prose is partly

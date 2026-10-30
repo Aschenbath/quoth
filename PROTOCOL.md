@@ -82,8 +82,9 @@ One forward pass over prefix + target, with the beginning-of-text token and no
 prompt or instructions. At each target token: is the model's top-1 prediction
 the true token, and what log-probability did it give the true token?
 
-* `greedy_words`: whole target words before the first miss. This is exactly how
-  far greedy decoding (temperature 0) reproduces the text.
+* `greedy_words`: whole target words before the first miss. This is how
+  far greedy decoding (temperature 0) reproduces the text, except where a near-tie
+  breaks differently (see "Step 4, explained").
 * `top1_words`: share of target words whose every token is the top-1
   prediction, given the true text before it. Ordinary prose is partly guessable,
   so this is compared with the novel controls.
