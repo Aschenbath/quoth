@@ -425,7 +425,7 @@ function renderBook() {
     }
   }
   if (!ps.some((p) => p.kind === "quoted") && w.pg) {
-    kids.splice(2, 0, el("p", { class: "meta", text: "Wikiquote has no lines from this book." }));
+    kids.splice(2, 0, el("p", { class: "meta", text: "No usable Wikiquote lines were found for this book." }));
   }
   book.replaceChildren(...kids);
 }
@@ -617,7 +617,7 @@ function copiesLede(all) {
     `infini-gram counts exact phrases in trillions of tokens of it. The opening of The Fall of the House of Usher occurs ` +
     `${fmt(uo.web.dclm)} times in DCLM, an open web corpus; a page ${pct(up.pos)} of the way in occurs ${fmt(up.web.dclm)} times. ` +
     `${name(STAR)} recites the first for ${uo.scores[STAR].g} words and predicts only ${pct(up.scores[STAR].t)} of the second. ` +
-    `Across the books, ${many.length} random pages occur a hundred times or more. Copies help a little: it predicts ${pct(mean(many, STAR))} ` +
+    `Across the books, ${many.length} random pages have a seam that occurs a hundred times or more. Copies help a little: it predicts ${pct(mean(many, STAR))} ` +
     `of their words, against ${pct(mean(none, STAR))} on pages with no copies at all. But it recites ${rec === 0 ? "none" : "only " + spell(rec)} of them.`;
   const o = body(OLMO, "olmo-mix");
   if (!o.length || !uo.web["olmo-mix"]) return;
@@ -625,7 +625,7 @@ function copiesLede(all) {
   const orec = om.filter((p) => p.scores[OLMO].g >= D.recited_at).length;
   const olong = Math.max(...om.map((p) => p.scores[OLMO].g));
   $("#copies-open").textContent = `DCLM only stands in for Gemma's training data, which is private. OLMo 2's pretraining data is public, so ` +
-    `for ${name(OLMO)} the count is exact: ${om.length} random pages occur a hundred times or more in the very text it was pretrained on, and it ` +
+    `for ${name(OLMO)} the count is exact: ${om.length} random pages have a ten-word seam that occurs a hundred times or more in the very text it was pretrained on, and it ` +
     `recites ${spell(orec)} of them; its longest run on any of them is ${plural(olong, "word")}. The opening of Usher occurs ` +
     `${fmt(uo.web["olmo-mix"])} times in that data, and ${name(OLMO)} predicts ${pct(uo.scores[OLMO].t)} of it, about what it manages on a random page.`;
 }

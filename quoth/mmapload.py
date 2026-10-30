@@ -2,7 +2,7 @@
 
 Every weight becomes a view into the file on disk, so the operating system
 pages in only what a forward pass touches. This is what makes Gemma 4 E4B
-usable on a laptop with ~10 GB of free RAM: about 5.6 GB of its 15 GB checkpoint
+usable on a laptop with ~10 GB of free RAM: about 5.6 GB of its 16 GB checkpoint
 is a per-layer embedding table that is only ever indexed by the input tokens,
 plus audio and vision encoders a text-only probe never calls.
 """

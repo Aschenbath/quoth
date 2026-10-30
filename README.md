@@ -78,8 +78,9 @@ python -m quoth web --index v4_olmo-mix-1124_llama --out results/web-olmo-mix.js
 python -m quoth report --site docs/data.json
 
 # 6. long generations, read with the looser ruler
-python -m quoth generate --model models/gemma-4-E4B --mmap --ids ID,ID,...     --max-new 400 --out results/gemma-4-E4B.long.jsonl
-python -m quoth recall --gen results/gemma-4-E4B.long.jsonl --cache GUTENBERG_DIR     --out results/gemma-4-E4B.recall.jsonl
+python -m quoth generate --model models/gemma-4-E4B --mmap --scores results/gemma-4-E4B.jsonl     --ids ID,ID,... --max-new 400 --out results/gemma-4-E4B.long.jsonl
+python -m quoth generate --model models/gemma-4-E4B --mmap --scores results/gemma-4-E4B.jsonl     --ids pg1065-00 --max-new 2000 --out results/gemma-4-E4B.raven.jsonl
+python -m quoth recall --gen results/gemma-4-E4B.raven.jsonl results/gemma-4-E4B.long.jsonl --cache GUTENBERG_DIR     --out results/gemma-4-E4B.recall.jsonl
 python -m quoth recall --gen results/gemma-4-E4B.raven.jsonl --book data/raven-1845.txt     --out results/gemma-4-E4B.raven-1845.jsonl
 
 # probe any text file of your own

@@ -19,7 +19,7 @@
   <p class="kicker">Hacktoberfest 2026 &middot; Ghost in the Machine</p>
   <h1>Qu<span class="q">o</span>th</h1>
   <p class="deck">Language models are trained on the words of the dead. I gave four small open-weight models
-    the first forty words of <span data-n="passages">1,071</span> passages from 33 ghost stories and asked them to keep going.
+    forty words at a time from 33 ghost stories (1,055 passages, plus 16 new control passages) and checked, word by word, whether they knew what came next.
     This is what they remember, word for word, and <em>whom they forgot.</em></p>
 
   <div class="recital" id="recital" aria-live="polite">
@@ -120,7 +120,7 @@
   <div class="cols" id="method-cols">
     <div>
       <h3>Measuring memory</h3>
-      <p>Each passage is 40 words of a book followed by the 50 words that really come next. The model reads the whole
+      <p>Each passage is 40 words of a book followed by the 50 words that really come next (fewer for some quoted lines; five are under ten words, so they can never count). The model reads the whole
         thing once, and at every position I check whether its single most likely next token is the true one. The
         unbroken run of hits from the start is what greedy decoding would reproduce, and I checked that by actually
         generating text for <span data-n="gen">every passage with a run of five words or more</span>. The three
@@ -129,7 +129,7 @@
         in A Christmas Carol the model wants a paragraph break before &ldquo;Old Marley was as dead as a door-nail,&rdquo;
         where this edition has none, and then goes on word for word.</p>
       <p>A passage counts as <b>recited</b> when the run reaches ten words. No control passage came close.</p>
-      <p>That makes the counts a floor. In each of the three exceptions, generation keeps to the book at least as long: in one Raven passage it prints a semicolon where the book has an exclamation mark, which ends the strict count at 2 words, and then recites the rest of the stanza. The test starts at word 41, so a model can know a book's first sentence and still
+      <p>In two of the three exceptions generation goes further. In the third, a Raven passage counted at 16 words, it prints a semicolon where the book has an exclamation mark, which ends the exact run at 2 words, and then recites the rest of the stanza. So exact counts can differ in either direction, but only by punctuation and near-ties. The test starts at word 41, so a model can know a book's first sentence and still
         score nothing. Matching is exact, so the opening of Usher stops at 25 words because this edition prints two hyphens
         where the model writes a dash, and the opening of The Raven stops at two because the model writes a curly
         quotation mark. A line under ten words cannot count: Gemma 4 E4B predicts all of &ldquo;man is not truly one,
