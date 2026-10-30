@@ -1,0 +1,41 @@
+{
+  "note": "tier is a label chosen before any model was run. downloads = Project Gutenberg 'downloads in the last 30 days' read from each book page on 2026-10-30. released = date the ebook first appeared on Project Gutenberg. start = the phrase where the measured text begins (front matter, contents and editors' prefaces are skipped).",
+  "works": [
+    {"pg": 84,    "tier": "canon", "title": "Frankenstein", "author": "Mary Shelley", "dates": "1797-1851", "year": 1818, "downloads": 191634, "released": "1993-10-01", "start": "You will rejoice to hear that no disaster"},
+    {"pg": 345,   "tier": "canon", "title": "Dracula", "author": "Bram Stoker", "dates": "1847-1912", "year": 1897, "downloads": 89423, "released": "1995-10-01", "start": "3 May. Bistritz."},
+    {"pg": 43,    "tier": "canon", "title": "Strange Case of Dr Jekyll and Mr Hyde", "author": "Robert Louis Stevenson", "dates": "1850-1894", "year": 1886, "downloads": 63696, "released": "2008-06-27", "start": "Mr. Utterson the lawyer was a man of a rugged countenance"},
+    {"pg": 1952,  "tier": "canon", "title": "The Yellow Wallpaper", "author": "Charlotte Perkins Gilman", "dates": "1860-1935", "year": 1892, "downloads": 52722, "released": "1999-11-01", "start": "It is very seldom that mere ordinary people"},
+    {"pg": 41,    "tier": "canon", "title": "The Legend of Sleepy Hollow", "author": "Washington Irving", "dates": "1783-1859", "year": 1820, "downloads": 50757, "released": "2008-06-27", "start": "In the bosom of one of those spacious coves"},
+    {"pg": 46,    "tier": "canon", "title": "A Christmas Carol", "author": "Charles Dickens", "dates": "1812-1870", "year": 1843, "downloads": 39329, "released": "2004-08-11", "start": "Marley was dead: to begin with."},
+    {"pg": 209,   "tier": "canon", "title": "The Turn of the Screw", "author": "Henry James", "dates": "1843-1916", "year": 1898, "downloads": 19831, "released": "1995-02-01", "start": "The story had held us, round the fire"},
+    {"pg": 932,   "tier": "canon", "title": "The Fall of the House of Usher", "author": "Edgar Allan Poe", "dates": "1809-1849", "year": 1839, "downloads": 10867, "released": "1997-06-01", "start": "During the whole of a dull, dark, and soundless day"},
+    {"pg": 14522, "tier": "canon", "title": "The Canterville Ghost", "author": "Oscar Wilde", "dates": "1854-1900", "year": 1887, "downloads": 7947, "released": "2004-12-30", "start": "When Mr. Hiram B. Otis, the American Minister"},
+    {"pg": 1065,  "tier": "canon", "title": "The Raven", "author": "Edgar Allan Poe", "dates": "1809-1849", "year": 1845, "downloads": 4990, "released": "1997-10-01", "start": "Once upon a midnight dreary"},
+
+    {"pg": 8492,  "tier": "genre", "title": "The King in Yellow", "author": "Robert W. Chambers", "dates": "1865-1933", "year": 1895, "downloads": 33882, "released": "2005-07-01", "start": "\"Along the shore the cloud waves break"},
+    {"pg": 10007, "tier": "genre", "title": "Carmilla", "author": "J. Sheridan Le Fanu", "dates": "1814-1873", "year": 1872, "downloads": 22160, "released": "2003-11-01", "start": "Upon a paper attached to the Narrative which follows"},
+    {"pg": 12122, "tier": "genre", "title": "The Monkey's Paw", "author": "W. W. Jacobs", "dates": "1863-1943", "year": 1902, "downloads": 12402, "released": "2004-04-01", "start": "Without, the night was cold and wet"},
+    {"pg": 6087,  "tier": "genre", "title": "The Vampyre", "author": "John William Polidori", "dates": "1795-1821", "year": 1819, "downloads": 9163, "released": "2004-07-01", "start": "It happened that in the midst of the dissipations"},
+    {"pg": 389,   "tier": "genre", "title": "The Great God Pan", "author": "Arthur Machen", "dates": "1863-1947", "year": 1894, "downloads": 5854, "released": "1996-01-01", "start": "\"I am glad you came, Clarke"},
+    {"pg": 8486,  "tier": "genre", "title": "Ghost Stories of an Antiquary", "author": "M. R. James", "dates": "1862-1936", "year": 1904, "downloads": 5368, "released": "2005-07-01", "start": "St Bertrand de Comminges is a decayed town"},
+    {"pg": 11438, "tier": "genre", "title": "The Willows", "author": "Algernon Blackwood", "dates": "1869-1951", "year": 1907, "downloads": 4370, "released": "2004-03-01", "start": "After leaving Vienna, and long before you come to Budapest"},
+    {"pg": 4366,  "tier": "genre", "title": "Can Such Things Be?", "author": "Ambrose Bierce", "dates": "1842-1914?", "year": 1893, "downloads": 2468, "released": "2003-08-01", "start": "One dark night in midsummer a man waking"},
+
+    {"pg": 72421, "tier": "forgotten", "title": "The Room in the Tower", "author": "E. F. Benson", "dates": "1867-1940", "year": 1912, "downloads": 1579, "released": "2023-12-15", "start": "It is probable that everybody who is at all a constant dreamer"},
+    {"pg": 1617,  "tier": "forgotten", "title": "The Wind in the Rose-Bush", "author": "Mary E. Wilkins Freeman", "dates": "1852-1930", "year": 1903, "downloads": 1462, "released": "1999-01-01", "start": "Ford Village has no railroad station"},
+    {"pg": 4514,  "tier": "forgotten", "title": "Tales of Men and Ghosts", "author": "Edith Wharton", "dates": "1862-1937", "year": 1910, "downloads": 1346, "released": "2003-10-01", "start": "Hubert Granice, pacing the length of his pleasant lamp-lit library"},
+    {"pg": 9956,  "tier": "forgotten", "title": "Hauntings", "author": "Vernon Lee", "dates": "1856-1935", "year": 1890, "downloads": 1086, "released": "2006-02-01", "start": "Urbania, August 20th, 1885."},
+    {"pg": 10052, "tier": "forgotten", "title": "The Open Door", "author": "Margaret Oliphant", "dates": "1828-1897", "year": 1882, "downloads": 999, "released": "2003-11-01", "start": "I took the house of Brentwood on my return from India"},
+    {"pg": 59165, "tier": "forgotten", "title": "Uncanny Stories", "author": "May Sinclair", "dates": "1863-1946", "year": 1923, "downloads": 949, "released": "2019-03-31", "start": "There was nobody in the orchard. Harriott Leigh"},
+    {"pg": 8602,  "tier": "forgotten", "title": "The Uninhabited House", "author": "Charlotte Riddell", "dates": "1832-1906", "year": 1875, "downloads": 853, "released": "2005-08-01", "start": "If ever a residence, \"suitable in every respect"},
+    {"pg": 69297, "tier": "forgotten", "title": "Tales for Christmas Eve", "author": "Rhoda Broughton", "dates": "1840-1920", "year": 1873, "downloads": 581, "released": "2022-11-06", "start": "\"18, ECCLESTON SQUARE,"},
+    {"pg": 37707, "tier": "forgotten", "title": "A Night on the Borders of the Black Forest", "author": "Amelia B. Edwards", "dates": "1831-1892", "year": 1890, "downloads": 491, "released": "2011-10-10", "start": "My story (if story it can be called"},
+
+    {"pg": 78060, "tier": "late", "title": "A Young Man's Story", "author": "Sarah Doudney", "dates": "1843-1926", "year": 1886, "downloads": 1276, "released": "2026-02-27", "start": "Yes, I confess I have known something"},
+    {"pg": 76737, "tier": "late", "title": "The Sociable Ghost", "author": "Olive Harper", "dates": "1842-1915", "year": 1903, "downloads": 587, "released": "2025-08-26", "start": "At the northwestern end of Trinity Church"},
+    {"pg": 76950, "tier": "late", "title": "The Ghost of Charlotte Cray", "author": "Florence Marryat", "dates": "1833-1899", "year": 1883, "downloads": 559, "released": "2025-09-29", "start": "Mr. Sigismund Braggett was sitting in the little room"},
+    {"pg": 77782, "tier": "late", "title": "Black Magic", "author": "Marjorie Bowen", "dates": "1888-1952", "year": 1909, "downloads": 535, "released": "2026-01-26", "start": "In the large room of a house in a certain quiet city in Flanders"},
+    {"pg": 78605, "tier": "late", "title": "Tales of the Uneasy", "author": "Violet Hunt", "dates": "1862-1942", "year": 1911, "downloads": 367, "released": "2026-05-04", "start": "Her mother was dead. Her life stood altered."},
+    {"pg": 78162, "tier": "late", "title": "The Feast of Bacchus", "author": "Ernest G. Henham", "dates": "1870-1948", "year": 1907, "downloads": 322, "released": "2026-03-10", "start": "The silence upon the river was broken"}
+  ]
+}

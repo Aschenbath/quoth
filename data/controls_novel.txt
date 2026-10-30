@@ -1,0 +1,71 @@
+Control passages: written fresh for this project on 2026-10-30 by the AI assistant
+(Claude) in the manner of a Victorian ghost story, and never published before this
+repository. No model can have trained on them, so they show what an open-weight
+model does with period prose it has never seen. Each block is one passage; the
+first 40 words are the prefix and the next 50 words the target.
+
+=== novel-01
+I had taken the rooms in Coldharbour Lane on the strength of a single advertisement and the landlady's assurance that the previous tenant had left of his own accord. She said it twice, which I ought to have remarked upon at the time. The sitting-room was low and brown and smelt faintly of camphor, and the window looked out upon a yard in which nothing had been permitted to grow. On the first evening I found, behind the wainscot by the fireplace, a child's glove of grey kid, very small, and still warm, as though it had that moment been drawn off.
+
+=== novel-02
+My dear Harriet, you will think me foolish, and I daresay you will be right, but I cannot settle to anything until I have told somebody, and you are the only person in the world who will not repeat it at the vicarage. On Tuesday night, a little after eleven, the bell in the disused chapel rang three times. Wilkins swears the rope was taken down in his grandfather's day, and he showed me the iron staple where it hung. This morning there was new rope upon it, wet through, and knotted in a fashion that Wilkins says the sailors of this coast have not used in sixty years.
+
+=== novel-03
+The coach set us down at the cross-roads a full two miles short of Abbot's Wenning, the driver declining, with a civility that did not quite conceal his alarm, to take his horses any nearer to the house after dark. My uncle laughed at him and gave him a shilling. We walked the rest of the way between high hedges, carrying our own bags, and I remember that the moon came up very red over the beech-hanger, and that my uncle stopped talking altogether when we passed the little railed enclosure at the turn of the lane where, he told me afterwards, the old squire had buried his hounds.
+
+=== novel-04
+The miller's wife has lit the lamp
+And set it on the sill,
+For the boat is due at the turn of the tide
+And the night is black and still.
+
+She hears the oars upon the weir,
+She hears the keel come in,
+She hears a foot upon the stair
+That is none of her own kin.
+
+"O who comes up so late, so late,
+With water at his heel?"
+"'Tis one that rowed this river once
+And never learned to kneel.
+
+"Put out your lamp, good miller's wife,
+And bar your door with stone,
+For I have come for what was mine
+And I'll not go home alone."
+
+=== novel-05
+Doctor Fenwick was not a man to whom imagination came easily, and it was for that reason, I think, that the Board sent him and not me. He arrived at the asylum on the evening of the fourteenth with a portmanteau, a microscope, and a firm conviction that there is nothing in this world which cannot be accounted for by drains. He examined the east wing by lamplight and pronounced it damp. He examined the patients and pronounced them comfortable. He examined the night attendant, who had not slept in four days, and pronounced him a drunkard. At three in the morning he rang for me.
+
+=== novel-06
+"You will not go into the long gallery after the candles are out," said Mrs. Trask, "and you will not answer if you are called by name. That is all, miss, and it is not much to ask." She said it as another housekeeper might have told me where the linen was kept, and she did not wait to see how I received it. I was nineteen and I had read a great many novels, and I confess that my first feeling was not fear but a kind of shameful delight, as though the house had offered me a confidence it would presently be sorry for.
+
+=== novel-07
+There had been a great deal of rain that autumn, and the river had come up over the water-meadows as far as the churchyard wall, so that the older graves on the lower side stood in a grey sheet of flood like the stones of a ford. The sexton told me that in such years the parish used to bury nobody on the north side until the water went down, and that the custom had lapsed only within his own memory. When I asked him why, he looked at me for a long moment and then said that the drowned do not care for company.
+
+=== novel-08
+Of the events at Halsey Mill I can speak only of what I saw myself, and I have been careful to set down nothing that my brother did not also witness, he being a man of no fancy whatever and a magistrate besides. We came to the mill at about four o'clock on a December afternoon, with the light already going. The wheel was still. The race was full and running hard. And yet from somewhere within the building there came, quite distinctly and at regular intervals, the groan and knock of machinery at work, as though the stones were grinding nothing in the dark.
+
+=== novel-09
+The portrait had been turned to the wall for so long that the nail had rusted through the cord, and when the footman lifted it down the frame came away in his hands and the canvas fell face upward upon the drawing-room carpet. It was a woman in the dress of the last century, young, fair, and so very like my cousin Isabel that the footman, who was a sensible lad, dropped the frame he was holding and went out of the room without a word. Isabel herself only laughed, and asked why nobody had ever told her that she had a sister.
+
+=== novel-10
+We had been talking of the sea, and of the curious things men see upon it, when old Captain Moberly, who had said nothing all evening, set down his glass and told us that he had once taken a passenger aboard the Margaret Ellen at Valparaiso who was not upon the ship's papers, who ate nothing, who spoke to nobody but the cabin-boy, and whom every man aboard had seen at one time or another standing at the taffrail in the middle watch. "We made the fastest passage home that ever I knew," said he, "and I would not make it again for the ship herself."
+
+=== novel-11
+Monday. The new governess arrived by the afternoon train, a pale, composed young person with a great deal of luggage and very little to say. The children took to her at once, which surprised me, for they have taken to nobody since their mother died. Tuesday. Miss Ashe asks whether there is another family in the house. I told her there is not. She says that she has twice heard a child crying in the nursery passage after the children were asleep, and that the voice was not Tom's nor Alice's. I said it was the wind. She did not argue.
+
+=== novel-12
+In the parish of Saint Ebba-under-Wold there is a field that has not been ploughed since the reign of Queen Anne, and the reason given for it, by those who will give any reason at all, is that the last man who put a share into it turned up a thing he would not name, and covered it again, and walked home, and sat down by his fire, and did not speak or eat or rise from his chair for nine days, at the end of which he died. His team, they say, stood in the furrow until morning and would not be led out.
+
+=== novel-13
+My grandmother kept a box of letters which she would never allow us to read, and which she burned, all but one, in the week before her death. The one she kept back she gave to me, saying that it was the only one of them that could do no harm now, because the person who wrote it was safely dead. It is dated from Bath in the spring of the year eighteen hundred and forty-one, and it is signed with her own name, in her own hand, though she was at that time, by every account, a child of four years old living in Northumberland.
+
+=== novel-14
+The inn at Scarth was the last house before the moor, and the landlord was plainly unused to guests, for he showed us into a parlour where the fire had not been lit in months and the chairs stood in a ring about the cold hearth as if a company had lately risen from them. He apologised for the cold. He apologised for the candles. He apologised, at some length and to no purpose that I could discover, for the clock upon the mantelshelf, which had stopped at twenty minutes to two, and which he begged us on no account to wind.
+
+=== novel-15
+It was my first winter in practice, and I was called out a little before midnight to a cottage on the Hollins road where, the boy said, an old woman was dying. I found the cottage without much difficulty, for there was a light in every window, and I found the old woman sitting up in bed, quite composed, with her Sunday bonnet upon her head. She told me that I had come too soon and should have to wait, and when I asked her for what, she said that her husband was coming to fetch her at one o'clock, as he had promised.
+
+=== novel-16
+The house in Monkwell Square had been let and given up so often in the last ten years that the agents had ceased to describe it as desirable and now described it only as commodious. I took it for that reason, being a poor man with a large family, and I will say for it that in the first month it gave us no cause for complaint beyond a smoking chimney in the back drawing-room and a door on the second landing that would not stay shut. It was my youngest daughter who first observed that the door was always open toward her.
