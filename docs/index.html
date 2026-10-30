@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quoth: what the machine remembers</title>
+<meta name="description" content="Which ghost stories can small open-weight language models recite word for word? 1,071 passages from 33 public-domain ghost stories, scored on Gemma 3, Gemma 4 and OLMo 2.">
+<meta property="og:title" content="Quoth: what the machine remembers">
+<meta property="og:description" content="Gemma 4 can recite the first page of Jekyll and Hyde. It cannot recite one sentence by the nine ghost-story writers we forgot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 5 6 8 6 13a6 6 0 0 1-12 0c0-5 3-8 6-13z' fill='%23ffb347'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="wrap hero">
+  <p class="kicker">Hacktoberfest 2026 &middot; Ghost in the Machine</p>
+  <h1>Qu<span class="q">o</span>th</h1>
+  <p class="deck">Language models are trained on the words of the dead. I gave four small open-weight models
+    the first forty words of <span data-n="passages">1,071</span> passages from 33 ghost stories and asked them to keep going.
+    This is what they remember, word for word, and <em>whom they forgot.</em></p>
+
+  <div class="recital" id="recital" aria-live="polite">
+    <div class="who"><span id="rec-who"><b>Gemma 4 E4B</b> &middot; Strange Case of Dr Jekyll and Mr Hyde (1886)</span><span id="rec-where">the opening</span></div>
+    <div class="text" id="rec-text"></div>
+    <p class="verdict" id="rec-verdict"></p>
+    <div class="switch" id="rec-switch"></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+</header>
+
+<main>
+
+<section class="wrap" id="seance">
+  <h2><span class="n">I &middot; The s&eacute;ance</span>Read along with the machine</h2>
+  <p class="lede">Each card is one passage. The faded words are what the model was given. After that, a bright word is
+    one it predicted exactly, a dark word is one it missed, and the glowing run is what it would have recited on its
+    own before its first mistake.</p>
+
+  <div class="controls" id="controls">
+    <div class="group" role="group" aria-label="Model"><span class="label">Model</span><span id="model-btns"></span></div>
+  </div>
+
+  <div class="legend" aria-hidden="true">
+    <span><span class="w prefix">given</span></span>
+    <span><span class="w run">recited</span></span>
+    <span><span class="w hit">predicted</span></span>
+    <span><span class="w miss">missed</span></span>
+    <span><span class="w break">first mistake</span></span>
+  </div>
+
+  <div class="reader">
+    <nav class="works" id="works" aria-label="Books"></nav>
+    <div id="book" tabindex="-1"></div>
+  </div>
+</section>
+
+<section class="wrap" id="keeps">
+  <h2><span class="n">II &middot; What it keeps</span>The doorway, not the house</h2>
+  <p class="lede" id="keeps-lede">In the ten classics, all four models lean the same way, and the lean sharpens as they
+    grow: openings and the lines people quote rise above text no model has seen, while random pages from the middle of
+    the same books stay close to it. The four random pages Gemma 4 E4B does recite are doorways of their own: the
+    paragraph after the opening of A Christmas Carol, two passages of The Raven, which people learn by heart, and the
+    lines just after Jekyll&rsquo;s &ldquo;man is not truly one, but truly two.&rdquo;</p>
+  <div class="figs">
+    <figure class="wide" id="fig-kinds"></figure>
+    <figure id="fig-tiers"></figure>
+    <figure id="fig-scale"></figure>
+  </div>
+</section>
+
+<section class="wrap" id="copies">
+  <h2><span class="n">III &middot; The copies</span>A hundred copies are not enough</h2>
+  <p class="lede" id="copies-lede"></p>
+  <p class="lede" id="copies-open"></p>
+  <div class="figs">
+    <figure class="wide" id="fig-web"></figure>
+  </div>
+</section>
+
+<section class="wrap ofrenda" id="ofrenda">
+  <div class="papel" aria-hidden="true"></div>
+  <h2><span class="n">IV &middot; D&iacute;a de los Muertos</span>An ofrenda for the forgotten</h2>
+  <p class="lede">On the Day of the Dead, families set out an ofrenda of marigolds, photographs and the food the dead
+    loved, because the dead are only truly gone when no one remembers them. Many Victorian ghost stories were written
+    by women who are rarely read now. Not one passage of theirs survives in these models: the longest run any of the
+    four manages on their books is <span data-n="ghost-run">five words</span>. Here is a sentence from each, and a way to
+    read the rest.</p>
+  <div class="altar" id="altar"></div>
+  <p class="late-note" id="late-note"></p>
+  <div class="altar" id="altar-late"></div>
+</section>
+
+<section class="wrap" id="method">
+  <h2><span class="n">V &middot; How it works</span>Method, and why it had to be open</h2>
+  <div class="cols" id="method-cols">
+    <div>
+      <h3>Measuring memory</h3>
+      <p>Each passage is 40 words of a book followed by the 50 words that really come next. The model reads the whole
+        thing once, and at every position I check whether its single most likely next token is the true one. The
+        unbroken run of hits from the start is what greedy decoding would reproduce, and I checked that by actually
+        generating text for <span data-n="gen">every passage with a run of five words or more</span>. The three
+        exceptions are two near-ties, where the model's two best guesses are almost equally likely and bfloat16
+        arithmetic breaks the tie differently in one pass than in step-by-step generation, and one edition difference:
+        in A Christmas Carol the model wants a paragraph break before &ldquo;Old Marley was as dead as a door-nail,&rdquo;
+        where this edition has none, and then goes on word for word.</p>
+      <p>A passage counts as <b>recited</b> when the run reaches ten words. No control passage came close.</p>
+      <h3>Controls</h3>
+      <ul>
+        <li>16 passages in the style of the books, written for this project and never published, so no model can have
+          seen them. An AI (Claude) wrote them, and text written by an AI is easier for a model to predict, so they are
+          a generous baseline.</li>
+        <li>Six ghost books first posted to Project Gutenberg in 2025 and 2026, after the models' training data was
+          collected: human-written pages the models have probably never seen.</li>
+        <li>The sample, metrics and threshold were committed to git in <a href="https://github.com/Aschenbath/quoth/blob/main/PROTOCOL.md">PROTOCOL.md</a>
+          before the main run. What changed after that is listed at its end.</li>
+      </ul>
+      <h3>Counting copies</h3>
+      <p>For each passage, the <a href="https://infini-gram.io">infini-gram</a> API counts the ten words where the given
+        text meets the continuation: in DCLM, a deduplicated open web corpus that stands in for Gemma's private data,
+        and in OLMo 2's own pretraining data. Exact matching misses copies with other spellings or punctuation, so
+        passages whose ten words span a line break are left out of every count.</p>
+    </div>
+    <div>
+      <h3>On a laptop</h3>
+      <p>Everything ran on one laptop CPU in bfloat16. Gemma 4 E4B's checkpoint is 15 GB and the machine had about
+        10 GB of RAM free, so the weights are memory-mapped straight from the safetensors file: the operating system
+        pages in only what a forward pass touches. About 1.6 seconds per passage.</p>
+      <h3>Why it had to be open</h3>
+      <ul>
+        <li><b>Open weights</b> give the full probability of every token. A chat API returns text, and an
+          instruction-tuned model paraphrases; neither tells you what the base model knows by heart.</li>
+        <li><b>Open data</b> lets you ask why. OLMo 2's pretraining data, about four trillion tokens, is public and
+          indexed by infini-gram, so every passage can be counted in exactly what the model learned from. Gemma's
+          training data is not public, so for Gemma an open web corpus is only a stand-in.</li>
+        <li><b>Open texts</b>: the books are public domain, from Project Gutenberg, and the quoted lines come from
+          Wikiquote's volunteers.</li>
+      </ul>
+      <p><a href="https://github.com/Aschenbath/quoth">Code, data and results on GitHub</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>Made by Nash Aschenbath for the DEV Hacktoberfest 2026 Open-Source AI Challenge. Built with Claude Code, an AI
+    coding agent, which wrote most of the code and text with me; the 16 control passages were written by Claude.
+    Texts: Project Gutenberg (public domain). Quote selections: English Wikiquote (CC BY-SA 4.0). Models: Gemma 3 1B
+    (Gemma license), Gemma 4 E2B and E4B (Apache 2.0), OLMo 2 1B (Apache 2.0). Corpus counts: infini-gram API. Code: MIT.</p>
+</footer>
+
+<div class="tip" id="tip" role="status"></div>
+<noscript><p class="wrap noscript">This page needs JavaScript to draw the passages and charts. The raw results are in the
+  <a href="https://github.com/Aschenbath/quoth">repository</a>.</p></noscript>
+<script src="app.js" defer></script>
+</body>
+</html>
