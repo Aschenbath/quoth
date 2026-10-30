@@ -36,7 +36,7 @@ words or more. Passages recited, out of 1,071:
   none, with a longest run of six words. In DCLM: 138, of which Gemma 4 E4B
   recites three.
 
-Limits: the control passages were written by an AI, and such text is easier for a
+Limits: the control passages were written by an AI, and such text may be easier for a
 model to predict, so they may be a generous baseline; random pages from the forgotten
 books (33%) and from books posted after training (34%) land a little below them.
 The "late" books are probably unseen, not certainly. Copies are exact matches in

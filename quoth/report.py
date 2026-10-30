@@ -188,7 +188,7 @@ def site_data(works: list[dict], passages: list[dict], res: dict, summary: dict,
     out_works = [{k: w[k] for k in ("pg", "tier", "title", "author", "dates", "year", "downloads", "released")
                   if k in w} | {"passages": by_pg.get(w["pg"], []), "quoted": len(quotes.get(str(w["pg"]), []))}
                  for w in works]
-    out_works.append({"pg": None, "tier": "novel", "title": "Written yesterday", "author": "control passages",
+    out_works.append({"pg": None, "tier": "novel", "title": "New control text", "author": "control passages",
                       "passages": by_pg.get(None, []), "quoted": 0})
     return {"models": [{"id": m, "name": names[m]} for m in res], "recited_at": RECITED,
             "works": out_works, "passages": out_passages, "summary": summary,

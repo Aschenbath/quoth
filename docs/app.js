@@ -282,7 +282,7 @@ function renderRaven() {
   $("#raven-floor").textContent = `The main test on this page gives that same passage a score of ${sc.g} words. It compares exactly, and the third word is a ` +
     `quotation mark this copy prints straight and the model writes curly. Project Gutenberg's copy of the poem is also a different printing, with “visiter” ` +
     `for “visitor” and “sad soul” for “fancy”, so I checked the recitation against the Poetry Foundation's text of the 1845 edition as well. Everything ` +
-    `below uses the strict test, so read its counts as a floor.`;
+    `below uses the strict test; its exact runs can differ from real generation in either direction, but only by punctuation and near-ties.`;
 }
 
 function renderOpenings() {
@@ -305,7 +305,7 @@ function renderOpenings() {
     el("div", {}, group("canon", "The canon"), group("genre", "Genre favourites")),
     el("div", {}, group("forgotten", "The forgotten"), group("late", "Posted after training"))));
   const frank = rows.find((r) => r.w.pg === 84), raven = rows.find((r) => r.w.pg === 1065);
-  fig.append(el("figcaption", { text: `Words are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line up again. Each opening had 400 tokens of room, The Raven 2,000 because it had not stopped. One wrong turn is usually the end: ${frank.w.title}, downloaded ${fmt(frank.w.downloads)} times in the 30 days to Oct 30, 2026 to The Raven's ${fmt(raven.w.downloads)}, is ${pct(frank.t)} predicted when corrected, but left alone it goes wrong after ${plural(frank.n, "word")} and does not find its way back.` }));
+  fig.append(el("figcaption", { text: `Words are compared without punctuation or case, and a slip of a word or two is passed over if the next three words line up again. Each opening had 400 tokens of room, The Raven 2,000 because it had not stopped. One wrong turn is usually the end: ${frank.w.title}, downloaded ${fmt(frank.w.downloads)} times in the 30 days to Oct 30, 2026 (The Raven: ${fmt(raven.w.downloads)}), is ${pct(frank.t)} predicted when corrected, but left alone it goes wrong after ${plural(frank.n, "word")} and does not find its way back.` }));
 }
 
 /* ---------------- reader ---------------- */
@@ -614,11 +614,11 @@ function copiesLede(all) {
   const g = body(STAR, "dclm"), many = g.filter((p) => p.web.dclm >= 100), none = g.filter((p) => p.web.dclm === 0);
   const rec = many.filter((p) => p.scores[STAR].g >= D.recited_at).length;
   $("#copies-lede").textContent = `Maybe the models remember what was copied most. That can be checked, because some training data is open, and ` +
-    `infini-gram counts exact phrases in trillions of tokens of it. The opening of The Fall of the House of Usher occurs ` +
-    `${fmt(uo.web.dclm)} times in DCLM, an open web corpus; a page ${pct(up.pos)} of the way in occurs ${fmt(up.web.dclm)} times. ` +
+    `infini-gram counts exact phrases in trillions of tokens of it. The ten-word seam at the opening of The Fall of the House of Usher occurs ` +
+    `${fmt(uo.web.dclm)} times in DCLM, an open web corpus; the seam of a page ${pct(up.pos)} of the way in occurs ${fmt(up.web.dclm)} times. ` +
     `${name(STAR)} recites the first for ${uo.scores[STAR].g} words and predicts only ${pct(up.scores[STAR].t)} of the second. ` +
     `Across the books, ${many.length} random pages have a seam that occurs a hundred times or more. Copies help a little: it predicts ${pct(mean(many, STAR))} ` +
-    `of their words, against ${pct(mean(none, STAR))} on pages with no copies at all. But it recites ${rec === 0 ? "none" : "only " + spell(rec)} of them.`;
+    `of their words, against ${pct(mean(none, STAR))} on pages whose seam does not occur at all. But it recites ${rec === 0 ? "none" : "only " + spell(rec)} of them.`;
   const o = body(OLMO, "olmo-mix");
   if (!o.length || !uo.web["olmo-mix"]) return;
   const om = o.filter((p) => p.web["olmo-mix"] >= 100);
@@ -626,7 +626,7 @@ function copiesLede(all) {
   const olong = Math.max(...om.map((p) => p.scores[OLMO].g));
   $("#copies-open").textContent = `DCLM only stands in for Gemma's training data, which is private. OLMo 2's pretraining data is public, so ` +
     `for ${name(OLMO)} the count is exact: ${om.length} random pages have a ten-word seam that occurs a hundred times or more in the very text it was pretrained on, and it ` +
-    `recites ${spell(orec)} of them; its longest run on any of them is ${plural(olong, "word")}. The opening of Usher occurs ` +
+    `recites ${spell(orec)} of them; its longest run on any of them is ${plural(olong, "word")}. The seam at the opening of Usher occurs ` +
     `${fmt(uo.web["olmo-mix"])} times in that data, and ${name(OLMO)} predicts ${pct(uo.scores[OLMO].t)} of it, about what it manages on a random page.`;
 }
 
@@ -765,7 +765,7 @@ function altarCard(w) {
     fork(open),
     el("div", { class: "nums" },
       el("div", {}, "Downloaded ", el("b", { text: fmt(w.downloads) }), " times in the 30 days to Oct 30, 2026"),
-      el("div", {}, "Lines on Wikiquote: ", el("b", { text: String(w.quoted) })),
+      el("div", {}, "Usable Wikiquote lines found: ", el("b", { text: String(w.quoted) })),
       el("div", {}, `Longest run ${name(STAR)} recites: `, el("b", { text: `${best} word${best === 1 ? "" : "s"}` }))),
     el("a", { href: `https://www.gutenberg.org/ebooks/${w.pg}`, text: `Read ${w.title} →` }));
 }

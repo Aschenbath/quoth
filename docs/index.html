@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quoth: what the machine remembers</title>
-<meta name="description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. 1,071 passages from 33 public-domain ghost stories, scored on Gemma 3, Gemma 4 and OLMo 2.">
+<meta name="description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. 1,055 passages from 33 public-domain ghost stories, plus 16 new controls, scored on Gemma 3, Gemma 4 and OLMo 2.">
 <meta property="og:title" content="Quoth: what the machine remembers">
-<meta property="og:description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. On fifteen forgotten ghost books, no model gets past five.">
+<meta property="og:description" content="Given the first 40 words of The Raven, Gemma 4 writes the next 709 from memory. Given the openings of fifteen forgotten ghost books, it manages three at most.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -80,8 +80,8 @@
   <p class="lede" id="keeps-lede">In the ten classics, all four models lean the same way, and the lean sharpens as they
     grow: openings and the lines people quote rise above text no model has seen, while random pages from the middle of
     the same books stay close to it. The four random pages Gemma 4 E4B does recite are doorways of their own: the
-    paragraph after the opening of A Christmas Carol, two passages of The Raven, which people learn by heart, and the
-    a paragraph soon after Jekyll&rsquo;s &ldquo;man is not truly one, but truly two.&rdquo;</p>
+    paragraph after the opening of A Christmas Carol, two passages of The Raven, which people learn by heart, and a
+    passage later in the same paragraph as Jekyll&rsquo;s &ldquo;man is not truly one, but truly two.&rdquo;</p>
   <div class="figs">
     <figure class="wide" id="fig-kinds"></figure>
     <figure id="fig-tiers"></figure>
@@ -142,8 +142,8 @@
       <h3>Controls</h3>
       <ul>
         <li>16 passages in the style of the books, written for this project and unpublished before the models were trained, so no model can have
-          seen them. An AI (Claude) wrote them, and text written by an AI is easier for a model to predict, so they are
-          possibly a generous baseline.</li>
+          seen them. An AI (Claude) wrote them, and text written by an AI may be easier for a model to predict, so they
+          may be a generous baseline.</li>
         <li>Six ghost books first posted to Project Gutenberg in 2025 and 2026, after the models' training data was
           collected: human-written pages the models have probably never seen.</li>
         <li>The sample, metrics and threshold were committed to git in <a href="https://github.com/Aschenbath/quoth/blob/main/PROTOCOL.md">PROTOCOL.md</a>
