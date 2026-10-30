@@ -8,13 +8,13 @@ const TIERS = [
   ["genre", "Genre favourites"],
   ["forgotten", "The forgotten"],
   ["late", "Posted after training"],
-  ["novel", "Written yesterday"],
+  ["novel", "New control text"],
 ];
 const KINDS = [
   ["opening", "Openings", "var(--marigold)"],
   ["quoted", "Quoted lines", "var(--teal)"],
   ["body", "Random pages", "var(--stone)"],
-  ["novel", "Written yesterday", "var(--ink-2)"],
+  ["novel", "New control text", "var(--ink-2)"],
 ];
 const WEB_NAMES = { dclm: "the open web (DCLM)", "olmo-mix": "OLMo 2's training data" };
 const BIOS = {
@@ -180,7 +180,7 @@ function renderRecital(which = "opening") {
       const pages = p.work.passages.map((id) => D.passages[id]).filter((q) => q.kind === "body");
       const avg = pages.reduce((s, q) => s + q.scores[STAR].t, 0) / pages.length;
       v.append("A page from the middle of the same book: it predicts ", el("strong", { text: pct(sc.t) }),
-        ` of the words and recites ${sc.g === 0 ? "none" : sc.g === 1 ? "one" : sc.g} of them. The book's ${pages.length} random pages average ${pct(avg)}; passages written yesterday, which it cannot have seen, ${pct(novel)}.`);
+        ` of the words and recites ${sc.g === 0 ? "none" : sc.g === 1 ? "one" : sc.g} of them. The book's ${pages.length} random pages average ${pct(avg)}; passages new control text, which it cannot have seen, ${pct(novel)}.`);
     }
   };
   if (reduced) { verdict(); }
@@ -282,7 +282,7 @@ function renderRaven() {
   $("#raven-floor").textContent = `The main test on this page gives that same passage a score of ${sc.g} words. It compares exactly, and the third word is a ` +
     `quotation mark this copy prints straight and the model writes curly. Project Gutenberg's copy of the poem is also a different printing, with “visiter” ` +
     `for “visitor” and “sad soul” for “fancy”, so I checked the recitation against the Poetry Foundation's text of the 1845 edition as well. Everything ` +
-    `below uses the strict test, so read its counts as a floor.`;
+    `below uses the strict test, so read its counts as mostly a floor (Part VI has the one exception).`;
 }
 
 function renderOpenings() {
@@ -336,7 +336,7 @@ function renderWorks() {
       const best = bestRun(w, state.model);
       const b = el("button", { class: "work", type: "button", "aria-current": String(w.pg === state.pg) },
         el("span", { text: w.title }),
-        el("small", { text: w.pg ? `${w.author}, ${w.year}` : "16 passages, never published" }),
+        el("small", { text: w.pg ? `${w.author}, ${w.year}` : "16 passages, written for this project" }),
         el("span", { class: "best" + (best >= D.recited_at ? " lit" : ""), text: best >= D.recited_at ? String(best) : "–",
           title: `longest recited run: ${best} words` }));
       b.addEventListener("click", () => {
@@ -397,7 +397,7 @@ function renderBook() {
   const rec = scored.filter((p) => p.scores[state.model].g >= D.recited_at).length;
   const meta = w.pg
     ? `${w.author} (${w.dates}), ${w.year} · downloaded ${fmt(w.downloads)} times last month · on Project Gutenberg since ${w.released.slice(0, 4)}`
-    : "Passages in the style of the books, written for this project on 2026-10-30 and never published.";
+    : "Passages in the style of the books, written for this project on 2026-10-30, after every model here was trained.";
   const head = el("div", { class: "book-head" }, el("h3", { text: w.title }), el("div", { class: "meta", text: meta }),
     el("div", { class: "meta", text: `${name(state.model)}: ${rec} of ${scored.length} passages recited · ${pct(mean)} of words predicted on average` }),
     w.pg ? el("div", { class: "meta" }, el("a", { href: `https://www.gutenberg.org/ebooks/${w.pg}`, text: "Read it on Project Gutenberg" })) : null);
@@ -528,9 +528,9 @@ function dotRows(svg, rows, x0, dom, opts = {}) {
 function renderKinds() {
   const fig = $("#fig-kinds");
   figHead(fig, "The ten classics: openings, quoted lines and random pages",
-    "Share of words each model predicts exactly: mean over passages, with 95% bootstrap intervals. The vertical line extends the bottom row, text written yesterday, which no model can have seen.");
+    "Share of words each model predicts exactly: mean over passages, with 95% bootstrap intervals. The vertical line extends the bottom row, text new control text, which no model can have seen.");
   const cells = [["canon/opening", "Openings", "var(--marigold)"], ["canon/quoted", "Quoted lines", "var(--teal)"],
-    ["canon/body", "Random pages", "var(--stone)"], ["novel/novel", "Written yesterday", "var(--ink-2)"]];
+    ["canon/body", "Random pages", "var(--stone)"], ["novel/novel", "New control text", "var(--ink-2)"]];
   const per = D.models.map((m) => {
     const s = D.summary[m.id];
     return { m, ref: s.cells["novel/novel"], rows: cells.filter(([c]) => s.cells[c]).map(([c, label, color]) => ({ c: s.cells[c], label, color })) };
@@ -563,11 +563,11 @@ function renderTiers() {
     rows.push({ label, marks });
   }
   const nov = s.cells["novel/novel"];
-  table.push(["Written yesterday", "Control passages", pct(nov.top1), ciText(nov), nov.n, nov.recited]);
+  table.push(["New control text", "Control passages", pct(nov.top1), ciText(nov), nov.n, nov.recited]);
   const box = el("div");
   fig.append(box);
   const svg = svgEl("svg", { width: widthOf(box), class: "chart", role: "group", "aria-label": `${name(STAR)}: share of words predicted in openings and random pages, by tier` });
-  dotRows(svg, rows, 148, domainOf(rows.flatMap((r) => r.marks)), { rowH: 46, ref: [nov.top1, `written yesterday ${pct(nov.top1)}`] });
+  dotRows(svg, rows, 148, domainOf(rows.flatMap((r) => r.marks)), { rowH: 46, ref: [nov.top1, `new control text ${pct(nov.top1)}`] });
   box.append(svg);
   fig.append(tableView(["books", "passages", "predicted", "95% interval", "n", "recited"], table),
     el("figcaption", { text: "The line is the 16 passages written for this project. An AI wrote them, and text written by an AI is easier for a model to predict, so they are a generous baseline: random pages from the forgotten books land a little below them, level with the books posted after training." }));
@@ -575,7 +575,7 @@ function renderTiers() {
 
 function renderScale() {
   const fig = $("#fig-scale");
-  figHead(fig, "Passages recited, ten words or more", `Out of ${fmt(Object.keys(D.passages).length)}, smallest model to largest. Memory grows with the model.`);
+  figHead(fig, "Passages recited, ten words or more", `Out of ${fmt(Object.keys(D.passages).length)}, smallest model to largest. The larger Gemma 4 recites the most, though the models also differ in data and design.`);
   const box = el("div");
   fig.append(box);
   const W = widthOf(box), rowH = 34, x0 = 112, x1 = W - 44;

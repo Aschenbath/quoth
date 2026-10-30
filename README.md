@@ -5,9 +5,8 @@
 Which ghost stories can a small open-weight language model recite word for
 word? `quoth` feeds Gemma 3, Gemma 4 and OLMo 2 the first 40 words of a passage
 from 33 public-domain ghost stories and checks, token by token, whether the
-model's top prediction is the real next word. A model that has memorized a
-passage continues it verbatim; a model that hasn't does no better on it than on
-text written yesterday.
+model's top prediction is the real next word, and compares that with passages
+written for this project, which no model can have seen.
 
 The method, sample and thresholds were fixed in [PROTOCOL.md](PROTOCOL.md)
 before the main run; what changed afterwards is listed at its end. Read along
@@ -18,7 +17,7 @@ with the models on the [site](https://aschenbath.github.io/quoth/) (`docs/`).
 A passage is **recited** when greedy decoding continues the real text for ten
 words or more. Passages recited, out of 1,071:
 
-| model | openings (33) | random pages (920) | quoted lines (102) | written yesterday (16) |
+| model | openings (33) | random pages (920) | quoted lines (102) | new controls (16) |
 |---|---|---|---|---|
 | Gemma 3 1B | 0 | 0 | 0 | 0 |
 | OLMo 2 1B | 1 | 0 | 1 | 0 |
@@ -31,7 +30,7 @@ words or more. Passages recited, out of 1,071:
   them is five words.
 * In the canon, Gemma 4 E4B predicts 73% of the words of openings [58-87] and 57%
   of quoted lines [51-62], against 39% [37-40] on random pages and 37% [33-41] on
-  control passages written yesterday.
+  control passages written for this project.
 * Copies help a little but don't decide it. Random pages whose seam occurs 100
   times or more in OLMo 2's own pretraining data: 139, of which OLMo 2 1B recites
   none, with a longest run of six words. In DCLM: 138, of which Gemma 4 E4B
