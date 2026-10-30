@@ -41,8 +41,9 @@ chapter openings ("MARLEY was dead") are restored to normal case.
 
 ## Sampling (`quoth/sample.py`)
 
-Every passage is 40 words of real text (the prefix) and the 50 words that
-really follow it (the target). Seed `20261031`. Per work:
+Every prefix is 40 words. Openings and random passages are followed by the 50
+words that really follow them (the target); quoted targets have up to 50, and the
+controls are newly written text of the same shape. Seed `20261031`. Per work:
 
 * **opening**: the first 90 words of the narrative;
 * **body**: one passage per 200 words of text, at most 29 more, one in each of
@@ -90,8 +91,8 @@ the true token, and what log-probability did it give the true token?
   so this is compared with the novel controls.
 * `mean_lp`: mean log-probability per target token.
 
-**Recited** means `greedy_words >= 10`: greedy decoding continues the real text
-for at least ten words. In the pilot no novel or late passage passed 4 on any
+**Recited** means `greedy_words >= 10`, measured with teacher forcing. Real
+greedy decoding usually agrees, but not always (see "Step 4, explained"). In the pilot no novel or late passage passed 4 on any
 model.
 
 ## Analysis plan

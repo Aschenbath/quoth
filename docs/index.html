@@ -120,7 +120,7 @@
   <div class="cols" id="method-cols">
     <div>
       <h3>Measuring memory</h3>
-      <p>Each passage is 40 words of a book followed by the 50 words that really come next (fewer for some quoted lines; five are under ten words, so they can never count). The model reads the whole
+      <p>Each passage is 40 words of a book followed by the 50 words that really come next (fewer for some quoted lines; five are under ten words, so they can never count). The 16 controls have the same shape but are newly written. The model reads the whole
         thing once, and at every position I check whether its single most likely next token is the true one. The
         unbroken run of hits from the start is what greedy decoding would reproduce, and I checked that by actually
         generating text for <span data-n="gen">every passage with a run of five words or more</span>. The three

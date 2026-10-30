@@ -74,14 +74,14 @@ python -m quoth generate --model models/gemma-4-E4B --mmap \
 python -m quoth web --index v4_dclm-baseline_llama --out results/web-dclm.jsonl
 python -m quoth web --index v4_olmo-mix-1124_llama --out results/web-olmo-mix.jsonl
 
-# 5. tables, and the site's data
-python -m quoth report --site docs/data.json
-
-# 6. long generations, read with the looser ruler
+# 5. long generations, read with the looser ruler
 python -m quoth generate --model models/gemma-4-E4B --mmap --scores results/gemma-4-E4B.jsonl     --ids ID,ID,... --max-new 400 --out results/gemma-4-E4B.long.jsonl
 python -m quoth generate --model models/gemma-4-E4B --mmap --scores results/gemma-4-E4B.jsonl     --ids pg1065-00 --max-new 2000 --out results/gemma-4-E4B.raven.jsonl
 python -m quoth recall --gen results/gemma-4-E4B.raven.jsonl results/gemma-4-E4B.long.jsonl --cache GUTENBERG_DIR     --out results/gemma-4-E4B.recall.jsonl
 python -m quoth recall --gen results/gemma-4-E4B.raven.jsonl --book data/raven-1845.txt     --out results/gemma-4-E4B.raven-1845.jsonl
+
+# 6. tables, and the site's data (reads all of the above)
+python -m quoth report --site docs/data.json
 
 # probe any text file of your own
 python -m quoth recite --model models/gemma-3-1b-pt --text some_book.txt
