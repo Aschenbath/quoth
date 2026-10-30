@@ -44,7 +44,7 @@ deduplicated corpora, so they undercount the web, and DCLM is only a stand-in fo
 Gemma's private training data. Prediction is measured on a sample of pages, not
 on whole books, so "recites none" means none of the sampled passages.
 
-Read loosely, the counts are a floor. Given the first 40 words of The Raven,
+The strict counts miss recitations that differ only in punctuation. Given the first 40 words of The Raven,
 Gemma 4 E4B writes the next 709 words of the poem, with 2 differences from the
 1845 text, though the strict test scores that passage 2 because of a curly
 quotation mark. `quoth/recall.py` is that looser ruler; it was added after the
@@ -129,3 +129,15 @@ python -m quoth recite --model models/gemma-3-1b-pt --text some_book.txt
   and OLMo 2's pretraining data (OLMo-mix-1124).
 * Built with [Claude Code](https://claude.com/claude-code), an AI coding agent,
   which wrote most of the code and text with the author.
+
+## Weights used
+
+Checkpoint revisions were not recorded when the models were downloaded from
+ModelScope. SHA-256 of the weight files used for the results (Gemma 3 1B and
+Gemma 4 E2B were deleted for disk space before this was taken):
+
+```
+43fb96cec3045b72852c787540300dc5b258634b7a025f7c80355ac0788b9651  *gemma-4-E4B/model.safetensors
+c52e4ac8bf4867e698d908f9e8c2b84aa891b91dff066d46bf2a7cf453ad77fb  *OLMo-2-0425-1B/model-00001-of-00002.safetensors
+5f80762572fe28aca49b01b98895d96ca529b9792fc10925a977a161ad768d30  *OLMo-2-0425-1B/model-00002-of-00002.safetensors
+```
